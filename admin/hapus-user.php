@@ -2,15 +2,20 @@
 
 include("koneksi.php");
 
-if(isset($_POST['tambah'])){
+$id = $_GET['id'];
+$sql = "SELECT * FROM user WHERE id='$id'";
+$result = mysqli_query($link, $sql);
+$data = mysqli_fetch_array($result);
+
+if(isset($_POST['hapus'])){
   $nama_lengkap = $_POST['nama_lengkap'];
   $username = $_POST['username'];
   $password = $_POST['password'];
   $status = $_POST['status'];
 
-  $sql = "INSERT INTO user (nama_lengkap, username, password, status) VALUES ('$nama_lengkap', '$username', '$password', '$status')";
+  $sql = "DELETE FROM user WHERE id='$id'";
 
-  $result = mysqli_query($link, $sql);
+  mysqli_query($link, $sql);
 
   header("Location: user-admin.php");
 
@@ -187,7 +192,7 @@ if(isset($_POST['tambah'])){
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item">User</li>
               <li class="breadcrumb-item"><a href="user-admin.html">Admin</a></li>
-              <li class="breadcrumb-item active">Tambah User</li>
+              <li class="breadcrumb-item active">Hapus User</li>
             </ol>
           </div><!-- /.col -->
         </div><!-- /.row -->
@@ -202,9 +207,9 @@ if(isset($_POST['tambah'])){
         <div class="row">
           <div class="col-md-12">
             <!-- general form elements -->
-            <div class="card card-success">
+            <div class="card card-danger">
               <div class="card-header">
-                <h3 class="card-title">Tambah User</h3>
+                <h3 class="card-title">Hapus User</h3>
               </div>
               <!-- /.card-header -->
               <!-- form start -->
@@ -212,23 +217,23 @@ if(isset($_POST['tambah'])){
                 <div class="card-body">
                   <div class="form-group">
                     <label for="exampleInputEmail1">Nama Lengkap</label>
-                    <input type="text" name="nama_lengkap" class="form-control" id="exampleInputEmail1">
+                    <input type="text" name="nama_lengkap" class="form-control" id="exampleInputEmail1" value="<?php echo $data['nama_lengkap'] ?>" readonly>
                   </div>
                   <div class="form-group">
                     <label for="exampleInputEmail1">Username</label>
-                    <input type="text" name="username" class="form-control" id="exampleInputEmail1">
+                    <input type="text" name="username" class="form-control" id="exampleInputEmail1" value="<?php echo $data['username'] ?>">
                   </div>
                   <div class="form-group">
                     <label for="exampleInputPassword1">Password</label>
-                    <input type="password" name="password" class="form-control" id="exampleInputPassword1">
+                    <input type="password" name="password" class="form-control" id="exampleInputPassword1" value="<?php echo $data['password'] ?>">
                   </div>
                   <div class="form-group">
                     <label>Status</label>
                     <div class="input-group">
                       <select class="form-control select2" name="status" style="width: 100%;">
                         <option disabled="disabled" selected="selected">Pilih</option>
-                        <option value="admin">Admin</option>
-                        <option value="guru">Guru</option>
+                        <option value="admin" <?php if($data['status'] == "admin") echo "selected"; ?> value="admin">Admin</option>
+                        <option value="guru" <?php if($data['status'] == "guru") echo "selected"; ?> value="guru">Guru</option>
                       </select>
                     </div>
                   </div>
@@ -236,7 +241,7 @@ if(isset($_POST['tambah'])){
                 <!-- /.card-body -->
 
                 <div class="card-footer">
-                  <button type="submit" name="tambah" class="btn btn-success swalDefaultSuccess">
+                  <button type="submit" name="tambah" class="btn btn-danger swalDefaultDanger">
                     <i class="fa fa-check"></i>
                   </button>
                 </div>

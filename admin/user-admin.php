@@ -146,67 +146,27 @@ $result = mysqli_query($link, $sql);
                     </tr>
                   </thead>
                   <tbody>
+                    <?php 
+                    $no = 1;
+                    while($data = mysqli_fetch_array($result)) {
+                    ?>
                     <tr>
-                      <td>1</td>
-                      <td>John Doe</td>
-                      <td>jon</td>
-                      <td>Guru</td>
+                      <td><?php echo $no ?></td>
+                      <td><?php echo $data['nama_lengkap'] ?></td>
+                      <td><?php echo $data['username'] ?></td>
+                      <td><?php echo $data['nama_lengkap'] ?></td>
+                      <td><strong><?php echo $data['status'] ?></strong></td>
                       <td class="text-right py-0 align-middle">
                         <div class="btn-group btn-group-sm">
-                          <a href="#" class="btn btn-info"><i class="fas fa-pen"></i></a>
-                          <a href="#" class="btn btn-danger"><i class="fas fa-trash"></i></a>
+                          <a href="edit-user.php?id=<?php echo $data['id'] ?>" class="btn btn-info"><i class="fas fa-pen"></i></a>
+                          <a href="hapus-user.php?id=<?php echo $data['id'] ?>" class="btn btn-danger"><i class="fas fa-trash"></i></a>
                         </div>
                       </td>
                     </tr>
-                    <tr>
-                      <td>2</td>
-                      <td>Alexander Pierce</td>
-                      <td>alex</td>
-                      <td><span class="tag tag-warning">Admin</span></td>
-                      <td><a href="">Edit</a> | <a href="">Hapus</a></td>
-                    </tr>
-                    <tr>
-                      <td>3</td>
-                      <td>Bob Doe</td>
-                      <td>11-7-2014</td>
-                      <td><span class="tag tag-primary">Approved</span></td>
-                      <td>Bacon ipsum dolor sit amet salami venison chicken flank fatback doner.</td>
-                    </tr>
-                    <tr>
-                      <td>4</td>
-                      <td>Mike Doe</td>
-                      <td>11-7-2014</td>
-                      <td><span class="tag tag-danger">Denied</span></td>
-                      <td>Bacon ipsum dolor sit amet salami venison chicken flank fatback doner.</td>
-                    </tr>
-                    <tr>
-                      <td>5</td>
-                      <td>Jim Doe</td>
-                      <td>11-7-2014</td>
-                      <td><span class="tag tag-success">Approved</span></td>
-                      <td>Bacon ipsum dolor sit amet salami venison chicken flank fatback doner.</td>
-                    </tr>
-                    <tr>
-                      <td>6</td>
-                      <td>Victoria Doe</td>
-                      <td>11-7-2014</td>
-                      <td><span class="tag tag-warning">Pending</span></td>
-                      <td>Bacon ipsum dolor sit amet salami venison chicken flank fatback doner.</td>
-                    </tr>
-                    <tr>
-                      <td>7</td>
-                      <td>Michael Doe</td>
-                      <td>11-7-2014</td>
-                      <td><span class="tag tag-primary">Approved</span></td>
-                      <td>Bacon ipsum dolor sit amet salami venison chicken flank fatback doner.</td>
-                    </tr>
-                    <tr>
-                      <td>8</td>
-                      <td>Rocky Doe</td>
-                      <td>11-7-2014</td>
-                      <td><span class="tag tag-danger">Denied</span></td>
-                      <td>Bacon ipsum dolor sit amet salami venison chicken flank fatback doner.</td>
-                    </tr>
+                    <?php 
+                    $no++;
+                    }
+                    ?>
                   </tbody>
                 </table>
               </div>
