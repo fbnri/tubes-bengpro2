@@ -241,7 +241,7 @@ if(isset($_POST['hapus'])){
                 <!-- /.card-body -->
 
                 <div class="card-footer">
-                  <button type="submit" name="tambah" class="btn btn-danger swalDefaultDanger">
+                  <button type="submit" name="tambah" class="btn btn-danger swalDefaultSuccess">
                     <i class="fa fa-check"></i>
                   </button>
                 </div>

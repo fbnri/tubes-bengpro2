@@ -241,7 +241,7 @@ if(isset($_POST['edit'])){
                 <!-- /.card-body -->
 
                 <div class="card-footer">
-                  <button type="submit" name="edit" class="btn btn-warning swalDefaultWarning">
+                  <button type="submit" name="edit" class="btn btn-warning swalDefaultSuccess">
                     <i class="fa fa-check"></i>
                   </button>
                 </div>
