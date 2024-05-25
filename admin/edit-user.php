@@ -15,9 +15,14 @@ if(isset($_POST['edit'])){
 
   $sql = "UPDATE user set nama_lengkap='$nama_lengkap', username='$username', password='$password', status='$status' WHERE id='$id'";
 
-  mysqli_query($link, $sql);
-
-  header("Location: user-admin.php");
+  if (mysqli_query($link, $sql)){
+    session_start();
+    $_SESSION['success'] = "Berhasil mengubah data!";
+    header("Location: user-admin.php");
+    exit();
+  } else {
+    echo "Gagal: " . $sql . "<br>" . mysqli_error($link);
+  }
 
 }
 
@@ -112,71 +117,7 @@ if(isset($_POST['edit'])){
     </a>
 
     <!-- Sidebar -->
-    <div class="sidebar">
-      <!-- Sidebar user panel (optional) -->
-      <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-        <div class="image">
-          <img src="dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
-        </div>
-        <div class="info">
-          <a href="#" class="d-block">Alexander Pierce</a>
-        </div>
-      </div>
-
-      <!-- SidebarSearch Form -->
-      <div class="form-inline">
-        <div class="input-group" data-widget="sidebar-search">
-          <input class="form-control form-control-sidebar" type="search" placeholder="Search" aria-label="Search">
-          <div class="input-group-append">
-            <button class="btn btn-sidebar">
-              <i class="fas fa-search fa-fw"></i>
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Sidebar Menu -->
-      <nav class="mt-2">
-        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-          <!-- Add icons to the links using the .nav-icon class with font-awesome or any other icon font library -->
-          <li class="nav-item">
-            <a href="#" class="nav-link">
-              <i class="nav-icon fas fa-tachometer-alt"></i>
-              <p>
-                Dashboard
-                <i class="right fas fa-angle-left"></i>
-              </p>
-            </a>
-            <ul class="nav nav-treeview">
-              <li class="nav-item">
-                <a href="./index2.php" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Dashboard v2</p>
-                </a>
-              </li>
-            </ul>
-          </li>
-          <li class="nav-item menu-open">
-            <a href="#" class="nav-link active">
-              <i class="nav-icon fas fa-user-friends"></i>
-              <p>
-                User
-                <i class="right fas fa-angle-left"></i>
-              </p>
-            </a>
-            <ul class="nav nav-treeview">
-              <li class="nav-item">
-                <a href="user-admin.php" class="nav-link active">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Admin</p>
-                </a>
-              </li>
-            </ul>
-          </li>
-        </ul>
-      </nav>
-      <!-- /.sidebar-menu -->
-    </div>
+    <?php include('sidebar-user.php') ?>
     <!-- /.sidebar -->
   </aside>
 
@@ -190,9 +131,9 @@ if(isset($_POST['edit'])){
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item">User</li>
+              <li class="breadcrumb-item">Pengguna</li>
               <li class="breadcrumb-item"><a href="user-admin.html">Admin</a></li>
-              <li class="breadcrumb-item active">Edit User</li>
+              <li class="breadcrumb-item active">Edit Pengguna</li>
             </ol>
           </div><!-- /.col -->
         </div><!-- /.row -->
@@ -209,7 +150,7 @@ if(isset($_POST['edit'])){
             <!-- general form elements -->
             <div class="card card-warning">
               <div class="card-header">
-                <h3 class="card-title">Edit User</h3>
+                <h3 class="card-title">Edit Pengguna</h3>
               </div>
               <!-- /.card-header -->
               <!-- form start -->
@@ -230,18 +171,18 @@ if(isset($_POST['edit'])){
                   <div class="form-group">
                     <label>Status</label>
                     <div class="input-group">
-                      <select class="form-control select2" name="status" style="width: 100%;">
-                        <option disabled="disabled" selected="selected">Pilih</option>
-                        <option value="admin" <?php if($data['status'] == "admin") echo "selected"; ?> value="admin">Admin</option>
-                        <option value="guru" <?php if($data['status'] == "guru") echo "selected"; ?> value="guru">Guru</option>
-                      </select>
+                    <select class="form-control select2" name="status" style="width: 100%;">
+                      <option disabled="disabled">Pilih</option>
+                      <option <?php if($data['status'] == "ADMIN") echo "selected"; ?> value="admin">Admin</option>
+                      <option <?php if($data['status'] == "GURU") echo "selected"; ?> value="guru">Guru</option>
+                    </select>
                     </div>
                   </div>
                 </div>
                 <!-- /.card-body -->
 
                 <div class="card-footer">
-                  <button type="submit" name="edit" class="btn btn-warning swalDefaultSuccess">
+                  <button type="submit" name="edit" class="btn btn-warning">
                     <i class="fa fa-check"></i>
                   </button>
                 </div>
