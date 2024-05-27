@@ -1,6 +1,7 @@
 <?php
 
 include("koneksi.php");
+session_start();
 
 $sql = "SELECT * FROM user";
 $result = mysqli_query($link, $sql);
@@ -22,6 +23,8 @@ $result = mysqli_query($link, $sql);
   <link rel="stylesheet" href="plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
   <!-- Theme style -->
   <link rel="stylesheet" href="dist/css/adminlte.min.css">
+  <!-- SweetAlert2 -->
+  <link rel="stylesheet" href="plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css">
 </head>
 <body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed">
 <div class="wrapper">
@@ -98,7 +101,7 @@ $result = mysqli_query($link, $sql);
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item">User</li>
+              <li class="breadcrumb-item">Pengguna</li>
               <li class="breadcrumb-item active">Admin</li>
             </ol>
           </div><!-- /.col -->
@@ -142,7 +145,7 @@ $result = mysqli_query($link, $sql);
                       <th>Nama Lengkap</th>
                       <th>Username</th>
                       <th>Status</th>
-                      <th>Aksi</th>
+                      <th></th>
                     </tr>
                   </thead>
                   <tbody>
@@ -154,12 +157,11 @@ $result = mysqli_query($link, $sql);
                       <td><?php echo $no ?></td>
                       <td><?php echo $data['nama_lengkap'] ?></td>
                       <td><?php echo $data['username'] ?></td>
-                      <td><?php echo $data['nama_lengkap'] ?></td>
                       <td><strong><?php echo $data['status'] ?></strong></td>
                       <td class="text-right py-0 align-middle">
                         <div class="btn-group btn-group-sm">
-                          <a href="edit-user.php?id=<?php echo $data['id'] ?>" class="btn btn-info"><i class="fas fa-pen"></i></a>
-                          <a href="hapus-user.php?id=<?php echo $data['id'] ?>" class="btn btn-danger"><i class="fas fa-trash"></i></a>
+                          <a href="edit-user.php?id=<?php echo $data['id'] ?>" class="btn btn-warning"><i class="fas fa-pen"></i></a>
+                          <button class="btn btn-danger" onclick="confirmDelete(<?php echo $data['id']; ?>)"><i class="fas fa-trash"></i></button>
                         </div>
                       </td>
                     </tr>
@@ -214,10 +216,44 @@ $result = mysqli_query($link, $sql);
 <script src="plugins/jquery-mapael/maps/usa_states.min.js"></script>
 <!-- ChartJS -->
 <script src="plugins/chart.js/Chart.min.js"></script>
+<!-- SweetAlert2 -->
+<script src="plugins/sweetalert2/sweetalert2.min.js"></script>
+<!-- SweetAlert2 untuk konfirmasi hapus -->
+<script>
+  function confirmDelete(userId) {
+    Swal.fire({
+      title: 'Apakah Anda yakin?',
+      text: "Anda tidak dapat mengembalikan ini!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Ya, hapus!',
+      cancelButtonText: 'Tidak, batal!',
+      reverseButtons: true
+    }).then((result) => {
+      if (result.isConfirmed) {
+        window.location.href = 'hapus-user.php?id=' + userId;
+      }
+    });
+  }
+</script>
 
 <!-- AdminLTE for demo purposes -->
 <script src="dist/js/demo.js"></script>
 <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
 <script src="dist/js/pages/dashboard2.js"></script>
+
+<?php
+if (isset($_SESSION['success'])) {
+    echo "<script>
+    Swal.fire({
+        icon: 'success',
+        title: 'Success',
+        text: '" . $_SESSION['success'] . "'
+    });
+    </script>";
+    unset($_SESSION['success']);
+}
+?>
+
 </body>
 </html>

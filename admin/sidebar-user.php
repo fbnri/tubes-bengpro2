@@ -55,7 +55,7 @@
             <a href="#" class="nav-link active">
               <i class="nav-icon fas fa-user-friends"></i>
               <p>
-                User
+                Pengguna
                 <i class="right fas fa-angle-left"></i>
               </p>
             </a>
