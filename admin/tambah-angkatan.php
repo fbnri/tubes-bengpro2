@@ -2,23 +2,15 @@
 
 include("koneksi.php");
 
-$id = $_GET['id'];
-$sql = "SELECT * FROM user WHERE id='$id'";
-$result = mysqli_query($link, $sql);
-$data = mysqli_fetch_array($result);
+if(isset($_POST['tambah'])){
+  $angkatan = $_POST['angkatan'];
 
-if(isset($_POST['edit'])){
-  $nama_lengkap = $_POST['nama_lengkap'];
-  $username = $_POST['username'];
-  $password = $_POST['password'];
-  $status = $_POST['status'];
-
-  $sql = "UPDATE user set nama_lengkap='$nama_lengkap', username='$username', password='$password', status='$status' WHERE id='$id'";
+  $sql = "INSERT INTO angkatan (angkatan) VALUES ('$angkatan')";
 
   if (mysqli_query($link, $sql)){
     session_start();
-    $_SESSION['success'] = "Berhasil mengubah data!";
-    header("Location: user-admin.php");
+    $_SESSION['success'] = "Berhasil menambahkan data!";
+    header("Location: index2.php");
     exit();
   } else {
     echo "Gagal: " . $sql . "<br>" . mysqli_error($link);
@@ -51,11 +43,61 @@ if(isset($_POST['edit'])){
 
   <!-- Preloader -->
   <div class="preloader flex-column justify-content-center align-items-center">
-    <img class="animation__wobble" src="dist/img/logo-smktelkom.png" alt="SMK Telkom" height="60" width="60">
+    <img class="animation__wobble" src="dist/img/AdminLTELogo.png" alt="AdminLTELogo" height="60" width="60">
   </div>
 
   <!-- Navbar -->
-  <?php include("navbar.php") ?>
+  <nav class="main-header navbar navbar-expand navbar-dark">
+    <!-- Left navbar links -->
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+      </li>
+      <li class="nav-item d-none d-sm-inline-block">
+        <a href="index2.php" class="nav-link">Home</a>
+      </li>
+      <li class="nav-item d-none d-sm-inline-block">
+        <a href="#" class="nav-link">Contact</a>
+      </li>
+    </ul>
+
+    <!-- Right navbar links -->
+    <ul class="navbar-nav ml-auto">
+      <!-- Navbar Search -->
+      <li class="nav-item">
+        <a class="nav-link" data-widget="navbar-search" href="#" role="button">
+          <i class="fas fa-search"></i>
+        </a>
+        <div class="navbar-search-block">
+          <form class="form-inline">
+            <div class="input-group input-group-sm">
+              <input class="form-control form-control-navbar" type="search" placeholder="Search" aria-label="Search">
+              <div class="input-group-append">
+                <button class="btn btn-navbar" type="submit">
+                  <i class="fas fa-search"></i>
+                </button>
+                <button class="btn btn-navbar" type="button" data-widget="navbar-search">
+                  <i class="fas fa-times"></i>
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </li>
+
+      <!-- Messages Dropdown Menu -->
+      <li class="nav-item">
+        <a class="nav-link" data-widget="fullscreen" href="#" role="button">
+          <i class="fas fa-expand-arrows-alt"></i>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" data-widget="control-sidebar" data-slide="true" href="#" role="button">
+          <i class="fas fa-th-large"></i>
+        </a>
+      </li>
+    </ul>
+  </nav>
   <!-- /.navbar -->
 
   <!-- Main Sidebar Container -->
@@ -67,7 +109,7 @@ if(isset($_POST['edit'])){
     </a>
 
     <!-- Sidebar -->
-    <?php include('sidebar-user.php') ?>
+      <?php include('sidebar-dashboard.php') ?>
     <!-- /.sidebar -->
   </aside>
 
@@ -81,9 +123,8 @@ if(isset($_POST['edit'])){
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item">Pengguna</li>
-              <li class="breadcrumb-item"><a href="user-admin.html">Admin</a></li>
-              <li class="breadcrumb-item active">Edit Pengguna</li>
+              <li class="breadcrumb-item">Dashboard</li>
+              <li class="breadcrumb-item active">Tambah Angkatan</li>
             </ol>
           </div><!-- /.col -->
         </div><!-- /.row -->
@@ -98,41 +139,22 @@ if(isset($_POST['edit'])){
         <div class="row">
           <div class="col-md-12">
             <!-- general form elements -->
-            <div class="card card-warning">
+            <div class="card card-success">
               <div class="card-header">
-                <h3 class="card-title">Edit Pengguna</h3>
+                <h3 class="card-title">Tambah Angkatan</h3>
               </div>
               <!-- /.card-header -->
               <!-- form start -->
               <form method="post" action="">
                 <div class="card-body">
                   <div class="form-group">
-                    <label for="exampleInputEmail1">Nama Lengkap</label>
-                    <input type="text" name="nama_lengkap" class="form-control" id="exampleInputEmail1" value="<?php echo $data['nama_lengkap'] ?>">
-                  </div>
-                  <div class="form-group">
-                    <label for="exampleInputEmail1">Username</label>
-                    <input type="text" name="username" class="form-control" id="exampleInputEmail1" value="<?php echo $data['username'] ?>">
-                  </div>
-                  <div class="form-group">
-                    <label for="exampleInputPassword1">Password</label>
-                    <input type="password" name="password" class="form-control" id="exampleInputPassword1" value="<?php echo $data['password'] ?>">
-                  </div>
-                  <div class="form-group">
-                    <label>Status</label>
-                    <div class="input-group">
-                    <select class="form-control select2" name="status" style="width: 100%;">
-                      <option disabled="disabled">Pilih</option>
-                      <option <?php if($data['status'] == "ADMIN") echo "selected"; ?> value="admin">Admin</option>
-                      <option <?php if($data['status'] == "GURU") echo "selected"; ?> value="guru">Guru</option>
-                    </select>
-                    </div>
-                  </div>
+                    <label for="exampleInputEmail1">Angkatan</label>
+                    <input type="text" name="angkatan" class="form-control" id="exampleInputEmail1" value="Angkatan ">
                 </div>
                 <!-- /.card-body -->
 
                 <div class="card-footer">
-                  <button type="submit" name="edit" class="btn btn-warning">
+                  <button type="submit" name="tambah" class="btn btn-success">
                     <i class="fa fa-check"></i>
                   </button>
                 </div>
