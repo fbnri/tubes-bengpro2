@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+  <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
@@ -112,13 +112,13 @@
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="#" class="nav-link active">
+                <a href="pendaftar-reguler.php" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Pendaftar Reguler</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="pendaftar-prestasi.php" class="nav-link">
+                <a href="#" class="nav-link active">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Pendaftar Prestasi</p>
                 </a>
@@ -168,7 +168,7 @@
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item">Dashboard</li>
+              <li class="breadcrumb-item">Pendaftar</li>
               <li class="breadcrumb-item active">Pendaftar Reguler</li>
             </ol>
           </div><!-- /.col -->
@@ -191,7 +191,7 @@
           <div class="col-12">
             <div class="card">
               <div class="card-header">
-                <h3 class="card-title">Reguler</h3>
+                <h3 class="card-title text-sucsess">Prestasi</h3>
               </div>
               <!-- /.card-header -->
               <div class="card-body">
@@ -203,16 +203,20 @@
                     <th>No. Whatsapp Ortu</th>
                     <th>Alamat</th>
                     <th>Jurusan</th>
+                    <th>Rekap Rapot</th>
+                    <th>Rekap Prestasi</th>
+                    <th>Pas Foto</th>
                   </tr>
                   </thead>
                   <tbody>
                   <tr>
                     <td>Trident</td>
-                    <td>Internet
-                      Explorer 4.0
-                    </td>
+                    <td>Internet Explorer 4.0</td>
                     <td>Win 95+</td>
-                    <td> 4</td>
+                    <td>4</td>
+                    <td>X</td>
+                    <td>X</td>
+                    <td>X</td>
                     <td>X</td>
                   </tr>
                   <tr>
@@ -220,6 +224,9 @@
                     <td>All others</td>
                     <td>-</td>
                     <td>-</td>
+                    <td>U</td>
+                    <td>U</td>
+                    <td>U</td>
                     <td>U</td>
                   </tr>
                   </tbody>

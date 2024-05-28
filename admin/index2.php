@@ -75,9 +75,15 @@
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="pendaftar.php" class="nav-link">
+                <a href="pendaftar-reguler.php" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
-                  <p>Pendaftar</p>
+                  <p>Pendaftar Reguler</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="pendaftar-prestasi.php" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Pendaftar Prestasi</p>
                 </a>
               </li>
             </ul>
