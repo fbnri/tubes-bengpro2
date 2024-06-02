@@ -18,7 +18,7 @@
 <div class="register-box">
   <div class="card card-outline card-primary">
     <div class="card-header text-center">
-      <a href="index2.php" class="h1">Daftar Akun</a>
+      <a href="#" class="h1">Daftar Akun</a>
     </div>
     <div class="card-body">
       <p class="login-box-msg">Register a new membership</p>
