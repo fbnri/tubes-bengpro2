@@ -188,7 +188,7 @@
             <!-- /.info-box -->
           </div>
           <div class="col-12 col-sm-6 col-md-6">
-            <a href="pendaftar.php">
+            <a href="pendaftar-reguler.php">
               <div class="info-box mb-3 bg-warning">
                 <span class="info-box-icon bg-primary elevation-1"><i class="fas fa-users"></i></span>
 
