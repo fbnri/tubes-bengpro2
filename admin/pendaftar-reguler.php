@@ -1,3 +1,10 @@
+<?php
+
+include("koneksi.php");
+$sql = "SELECT * FROM"
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -195,33 +202,66 @@
               </div>
               <!-- /.card-header -->
               <div class="card-body">
-                <table id="example2" class="table table-bordered table-hover">
+                <table id="example1" class="table table-hover">
                   <thead>
                   <tr>
+                    <th>No</th>
+                    <th>NIK</th>
                     <th>Nama Siswa</th>
-                    <th>Nama Ortu</th>
-                    <th>No. Whatsapp Ortu</th>
+                    <th>TTL</th>
+                    <th>Jenis Kelamin</th>
                     <th>Alamat</th>
-                    <th>Jurusan</th>
+                    <th>No. Telp/HP</th>
+                    <th>Asal Sekolah</th>
+                    <th>Ijazah</th>
+                    <th>Rapor</th>
                   </tr>
                   </thead>
                   <tbody>
-                  <tr>
-                    <td>Trident</td>
-                    <td>Internet
-                      Explorer 4.0
-                    </td>
-                    <td>Win 95+</td>
-                    <td> 4</td>
-                    <td>X</td>
-                  </tr>
-                  <tr>
-                    <td>Other browsers</td>
-                    <td>All others</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>U</td>
-                  </tr>
+                    <?php
+                    // $no = 1;
+                    // while($data = mysqli_fetch_array($result)) :
+                    ?>
+                    <tr>
+                      <td>$no</td>
+                      <td>Win 95+</td>
+                      <td> 4</td>
+                      <td>X</td>
+                      <td>X</td>
+                      <td>X</td>
+                      <td>X</td>
+                      <td>X</td>
+                      <td>X</td>
+                      <td>X</td>
+                    </tr>
+                    <tr>
+                      <td>Other browsers</td>
+                      <td>All others</td>
+                      <td>-</td>
+                      <td>-</td>
+                      <td>U</td>
+                      <td>U</td>
+                      <td>U</td>
+                      <td>U</td>
+                      <td>U</td>
+                      <td>U</td>
+                    </tr>
+                    <tr>
+                      <td>Other browsers</td>
+                      <td>All others</td>
+                      <td>-</td>
+                      <td>-</td>
+                      <td>U</td>
+                      <td>U</td>
+                      <td>U</td>
+                      <td>U</td>
+                      <td>U</td>
+                      <td>U</td>
+                    </tr>
+                    <?php
+                    // $no++;
+                    // endwhile;
+                    ?>
                   </tbody>
                 </table>
               </div>
@@ -229,7 +269,6 @@
             </div>
             <!-- /.card -->
           </div>
-          <!-- /.col -->
         </div>
       </div><!--/. container-fluid -->
     </section>
@@ -281,11 +320,7 @@
 <!-- Page specific script -->
 <script>
   $(function () {
-    $("#example1").DataTable({
-      "responsive": true, "lengthChange": false, "autoWidth": false,
-      "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
-    }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
-    $('#example2').DataTable({
+    $('#example1').DataTable({
       "paging": true,
       "lengthChange": false,
       "searching": false,
