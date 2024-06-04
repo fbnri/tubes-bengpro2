@@ -1,3 +1,52 @@
+<?php
+
+include("koneksi.php");
+
+if(isset($_POST['tambah'])) {
+
+  if (isset($_FILES['ijazah']['name']))
+        {
+          // data siswa
+          $nama_siswa = $_POST['nama_siswa'];
+          $ttl = $_POST['ttl'];
+          $jk = $_POST['jk'];
+          $alamat = $_POST['alamat'];
+          $telp_siswa = $_POST['telp_siswa'];
+          $agama = $_POST['agama'];
+          $asal_sekolah = $_POST['asal_sekolah'];
+          $ijazah = $_POST['ijazah'];
+          $rapor = $_POST['rapor'];
+          
+          // data orang tua
+          $nama_ortu = $_POST['nama_ortu'];
+          $pekerjaan = $_POST['pekerjaan'];
+          $telp_ortu = $_POST['telp_ortu'];
+          $pendidikan = $_POST['pendidikan'];
+
+          $file_name = $_FILES['ijazah']['name'];
+          $file_tmp = $_FILES['ijazah']['tmp_name'];
+
+          move_uploaded_file($file_tmp,"../pdf/".$file_name);
+
+          $sql = 
+          "INSERT INTO pendaftar_reguler (nama_siswa, ttl, jk, alamat, telp_siswa, agama, asal_sekolah, ijazah, rapor, nama_ortu, pekerjaan, telp_ortu, pendidikan) VALUES ('$nama_siswa', '$ttl', '$jk', '$alamat','$telp_siswa', '$agama', '$asal_sekolah', '$ijazah', '$rapor', '$nama_ortu', '$pekerjaan', '$telp_ortu', '$pendidikan')";
+          $query = mysqli_query($link, $sql);
+        }
+
+  // $sql = "INSERT INTO pendaftar_reguler (nama_siswa, ttl, jk, alamat, telp_siswa, agama, asal_sekolah, ijazah, rapor, nama_ortu, pekerjaan, telp_ortu, pendidikan) VALUES ('$nama_siswa', '$ttl', '$jk', '$alamat','$telp_siswa', '$agama', '$asal_sekolah', '$ijazah', '$rapor', '$nama_ortu', '$pekerjaan', '$telp_ortu', '$pendidikan')";
+
+  if (mysqli_query($link, $sql)){
+    session_start();
+    $_SESSION['success'] = "Berhasil menambahkan data!";
+    header("Location: index.php");
+    exit();
+  } else {
+    echo "Gagal: " . $sql . "<br>" . mysqli_error($link);
+  }
+}
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -34,219 +83,214 @@
   <link rel="stylesheet" href="plugins/dropzone/min/dropzone.min.css">
   <!-- Theme style -->
   <link rel="stylesheet" href="dist/css/adminlte.min.css">
+  <!-- SweetAlert2 -->
+  <link rel="stylesheet" href="plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css">
 </head>
 
-<body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed">
-<div class="wrapper">
+<div class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed">
+  <div class="wrapper">
 
-  <!-- Preloader -->
-  <div class="preloader flex-column justify-content-center align-items-center">
-    <img class="animation__wobble" src="dist/img/logo-smktelkom.png" alt="SMK Telkom" height="60" width="60">
-  </div>
-
-  <!-- Navbar -->
-  <?php include("navbar.php") ?>
-  <!-- /.navbar -->
-
-  <!-- Main Sidebar Container -->
-  <aside class="main-sidebar sidebar-dark-primary elevation-4">
-    <!-- Brand Logo -->
-    <a href="index2.php" class="brand-link">
-      <img src="dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
-      <span class="brand-text font-weight-light">AdminLTE 3</span>
-    </a>
-
-    <!-- Sidebar -->
-      <?php include('sidebar.php') ?>
-    <!-- /.sidebar -->
-  </aside>
-
-  <!-- Content Wrapper. Contains page content -->
-  <div class="content-wrapper">
-    <!-- Content Header (Page header) -->
-    <div class="content-header">
-      <div class="container-fluid">
-        <div class="row mb-2">
-          <div class="col-sm-6">
-            <h1 class="m-0"><strong>Formulir Pendaftaran Jalur Reguler</strong></h1>
-          </div><!-- /.col -->
-        </div><!-- /.row -->
-      </div><!-- /.container-fluid -->
+    <!-- Preloader -->
+    <div class="preloader flex-column justify-content-center align-items-center">
+      <img class="animation__wobble" src="dist/img/logo-smktelkom.png" alt="SMK Telkom" height="60" width="60">
     </div>
-    <!-- /.content-header -->
 
-    <!-- Main content -->
-    <section class="content">
-      <div class="container-fluid">
-        <!-- Info boxes -->
-        <div class="row">
-          <div class="col-md-12">
-            <div class="card card-secondary">
-              <div class="card-header">
-                <h3 class="card-title">Data Diri</h3>
-  
-                <div class="card-tools">
-                  <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i>
+    <!-- Navbar -->
+    <?php include("navbar.php") ?>
+    <!-- /.navbar -->
+
+    <!-- Main Sidebar Container -->
+    <?php include('sidebar.php') ?>
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+      <!-- Content Header (Page header) -->
+      <div class="content-header">
+        <div class="container-fluid">
+          <div class="row mb-2">
+            <div class="col-sm-6">
+              <h1 class="m-0"><strong>Formulir Pendaftaran Jalur Reguler</strong></h1>
+            </div><!-- /.col -->
+          </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+      </div>
+      <!-- /.content-header -->
+
+      <!-- Main content -->
+      <section class="content">
+        <form action="" method="post" enctype="multipart/form-data">
+          <div class="container-fluid">
+            <!-- Info boxes -->
+            <div class="row">
+              <div class="col-md-12">
+                <div class="card card-secondary">
+                  <div class="card-header">
+                    <h3 class="card-title">Data Diri</h3>
+      
+                    <div class="card-tools">
+                      <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i>
+                      </button>
+                    </div>
+                    <!-- /.card-tools -->
+                  </div>
+                  <!-- /.card-header -->
+                  <div class="card-body">
+                    <div class="card-body">
+                      <div class="form-group">
+                        <label for="exampleInputEmail1">Nama Lengkap</label>
+                        <input type="text" name="nama_siswa" class="form-control" id="exampleInputEmail1">
+                      </div>
+                      <div class="form-group">
+                        <label>Tempat, Tanggal Lahir</label>
+                        <div class="input-group date" id="reservationdate" data-target-input="nearest">
+                          <input type="text" name="ttl" class="form-control datetimepicker-input" data-target="#reservationdate"/>
+                          <div class="input-group-append" data-target="#reservationdate" data-toggle="datetimepicker">
+                              <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label>Jenis Kelamin</label>
+                        <div class="input-group">
+                          <select class="form-control select1" name="jk">
+                            <option disabled="disabled" selected="selected">Pilih</option>
+                            <option value="laki-laki">Laki-Laki</option>
+                            <option value="perempuan">Perempuan</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label for="exampleInputPassword1">Alamat Lengkap</label>
+                        <textarea class="form-control" name="alamat" id=""></textarea>
+                      </div>
+                      <div class="form-group">
+                        <label for="exampleInputPassword1">No. Telp/HP</label>
+                        <input type="number" id="telp_siswa" maxlength="12" name="telp_siswa" class="form-control" id="exampleInputPassword1">
+                      </div>
+                      <div class="form-group">
+                        <label>Agama</label>
+                        <div class="input-group">
+                          <select class="form-control select1" name="agama">
+                            <option disabled="disabled" selected="selected">Pilih</option>
+                            <option value="islam">Islam</option>
+                            <option value="protestan">Protestan</option>
+                            <option value="katolik">Katolik</option>
+                            <option value="hindu">Hindu</option>
+                            <option value="buddha">Buddha</option>
+                            <option value="konghucu">Konghucu</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label for="exampleInputPassword1">Asal Sekolah</label>
+                        <input type="text" name="asal_sekolah" class="form-control" id="exampleInputPassword1">
+                      </div>
+                      <div class="form-group">
+                        <label for="ijazahInputFile">Ijazah</label>
+                        <div class="input-group">
+                          <div class="custom-file">
+                            <input type="file" name="ijazah" class="custom-file-input" id="ijazahInputFile" accept=".pdf">
+                            <label class="custom-file-label" for="ijazahInputFile">Pilih file</label>
+                          </div>
+                          </div>
+                      </div>
+                      <div class="form-group">
+                        <label for="raporInputFile">Rapor</label>
+                        <div class="input-group">
+                          <div class="custom-file">
+                            <input type="file" name="rapor" class="custom-file-input" id="raporInputFile" accept=".pdf">
+                            <label class="custom-file-label" for="raporInputFile">Pilih file</label>
+                          </div>
+                      </div>
+                    </div>
+                    </div>
+                    <!-- /.card-body -->
+                  </div>
+                  <!-- /.card-body -->
+                </div>
+                <!-- /.card -->
+              </div>
+              <div class="col-md-12">
+                <div class="card card-secondary">
+                  <div class="card-header">
+                    <h3 class="card-title">Data Orang Tua</h3>
+      
+                    <div class="card-tools">
+                      <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i>
+                      </button>
+                    </div>
+                    <!-- /.card-tools -->
+                  </div>
+                  <!-- /.card-header -->
+                  <div class="card-body">
+                    <div class="card-body">
+                      <div class="form-group">
+                        <label for="exampleInputEmail1">Nama Lengkap Orang Tua/Wali</label>
+                        <input type="text" name="nama_ortu" class="form-control" id="exampleInputEmail1">
+                      </div>
+                      <div class="form-group">
+                        <label for="exampleInputEmail1">Pekerjaan Orang Tua</label>
+                        <input type="text" name="pekerjaan" class="form-control" id="exampleInputEmail1">
+                      </div>
+                      <div class="form-group">
+                        <label for="exampleInputPassword1">No. Telp/HP Orang Tua/Wali</label>
+                        <input type="number" id="telp_ortu" maxlength="12" name="telp_ortu" class="form-control" id="exampleInputPassword1">
+                      </div>
+                      <div class="form-group">
+                        <label>Pendidikan Terakhir Orang Tua/Wali</label>
+                        <div class="input-group">
+                          <select class="form-control select1" name="pendidikan">
+                            <option disabled="disabled" selected="selected">Pilih</option>
+                            <option value="SD">SD</option>
+                            <option value="SMP">SMP</option>
+                            <option value="SMA/SMK">SMA/SMK</option>
+                            <option value="D3">D3</option>
+                            <option value="S1/D4">S1/D4</option>
+                            <option value="S2">S2</option>
+                            <option value="S3">S3</option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- /.card-body -->
+                  </div>
+                  <!-- /.card-body -->
+                </div>
+                <div class="card-footer mb-4">
+                  <button type="submit" name="tambah" class="btn btn-success form-control">
+                    <i class="fa fa-check"></i>
                   </button>
                 </div>
-                <!-- /.card-tools -->
+                <!-- /.card -->
               </div>
-              <!-- /.card-header -->
-              <div class="card-body">
-                <div class="card-body">
-                  <div class="form-group">
-                    <label for="exampleInputEmail1">Nama Lengkap</label>
-                    <input type="text" name="nama_lengkap" class="form-control" id="exampleInputEmail1">
-                  </div>
-                  <div class="form-group">
-                    <label>Tempat, Tanggal Lahir</label>
-                    <div class="input-group date" id="reservationdate" data-target-input="nearest">
-                      <input type="text" class="form-control datetimepicker-input" data-target="#reservationdate"/>
-                      <div class="input-group-append" data-target="#reservationdate" data-toggle="datetimepicker">
-                          <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="form-group">
-                    <label>Jenis Kelamin</label>
-                    <div class="input-group">
-                      <select class="form-control select1" name="status">
-                        <option disabled="disabled" selected="selected">Pilih</option>
-                        <option value="laki-laki">Laki-Laki</option>
-                        <option value="perempuan">Perempuan</option>
-                      </select>
-                    </div>
-                  </div>
-                  <div class="form-group">
-                    <label for="exampleInputPassword1">Alamat Lengkap</label>
-                    <input type="text" name="password" class="form-control" id="exampleInputPassword1">
-                  </div>
-                  <div class="form-group">
-                    <label for="exampleInputPassword1">No. Telp/HP</label>
-                    <input type="number" name="password" class="form-control" id="exampleInputPassword1">
-                  </div>
-                  <div class="form-group">
-                    <label>Agama</label>
-                    <div class="input-group">
-                      <select class="form-control select1" name="status">
-                        <option disabled="disabled" selected="selected">Pilih</option>
-                        <option value="islam">Islam</option>
-                        <option value="protestan">Protestan</option>
-                        <option value="katolik">Katolik</option>
-                        <option value="hindu">Hindu</option>
-                        <option value="buddha">Buddha</option>
-                        <option value="konghucu">Konghucu</option>
-                      </select>
-                    </div>
-                  </div>
-                  <div class="form-group">
-                    <label for="exampleInputPassword1">Asal Sekolah</label>
-                    <input type="text" name="password" class="form-control" id="exampleInputPassword1">
-                  </div>
-                  <div class="form-group">
-                    <label for="exampleInputFile">Ijazah</label>
-                    <div class="input-group">
-                      <div class="custom-file">
-                        <input type="file" class="custom-file-input" id="exampleInputFile">
-                        <label class="custom-file-label" for="exampleInputFile">Pilih file</label>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="form-group">
-                    <label for="exampleInputFile">Rapor</label>
-                    <div class="input-group">
-                      <div class="custom-file">
-                        <input type="file" class="custom-file-input" id="exampleInputFile">
-                        <label class="custom-file-label" for="exampleInputFile">Pilih file</label>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <!-- /.card-body -->
-              </div>
-              <!-- /.card-body -->
             </div>
-            <!-- /.card -->
-          </div>
-          <div class="col-md-12">
-            <div class="card card-secondary">
-              <div class="card-header">
-                <h3 class="card-title">Data Orang Tua</h3>
-  
-                <div class="card-tools">
-                  <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i>
-                  </button>
-                </div>
-                <!-- /.card-tools -->
-              </div>
-              <!-- /.card-header -->
-              <div class="card-body">
-                <div class="card-body">
-                  <div class="form-group">
-                    <label for="exampleInputEmail1">Nama Lengkap Orang Tua/Wali</label>
-                    <input type="text" name="nama_lengkap" class="form-control" id="exampleInputEmail1">
-                  </div>
-                  <div class="form-group">
-                    <label for="exampleInputEmail1">Pekerjaan Orang Tua</label>
-                    <input type="text" name="nama_lengkap" class="form-control" id="exampleInputEmail1">
-                  </div>
-                  <div class="form-group">
-                    <label for="exampleInputPassword1">No. Telp/HP Orang Tua/Wali</label>
-                    <input type="number" name="password" class="form-control" id="exampleInputPassword1">
-                  </div>
-                  <div class="form-group">
-                    <label>Pendidikan Terakhir Orang Tua/Wali</label>
-                    <div class="input-group">
-                      <select class="form-control select1" name="status">
-                        <option disabled="disabled" selected="selected">Pilih</option>
-                        <option value="sd">SD</option>
-                        <option value="smp">SMP</option>
-                        <option value="sma/smk">SMA/SMK</option>
-                        <option value="d3">D3</option>
-                        <option value="d4/s1">S1/D4</option>
-                        <option value="s2">S2</option>
-                        <option value="s3">S3</option>
-                      </select>
-                    </div>
-                  </div>
-                </div>
-                <!-- /.card-body -->
-              </div>
-              <!-- /.card-body -->
-            </div>
-            <div class="card-footer mb-4">
-              <button type="submit" name="tambah" class="btn btn-success form-control">
-                <i class="fa fa-check"></i>
-              </button>
-            </div>
-            <!-- /.card -->
-          </div>
-        </div>
-        <!-- /.row -->
-      </div><!--/. container-fluid -->
-    </section>
-    <!-- /.content -->
-  </div>
-  <!-- /.content-wrapper -->
-
-  <!-- Control Sidebar -->
-  <aside class="control-sidebar control-sidebar-dark">
-    <!-- Control sidebar content goes here -->
-  </aside>
-  <!-- /.control-sidebar -->
-
-  <!-- Main Footer -->
-  <footer class="main-footer">
-    <strong>Copyright &copy; 2024 SkuyBro.</strong>
-    All rights reserved.
-    <div class="float-right d-none d-sm-inline-block">
-      <a href="login.html">
-        <button type="submit" class="btn btn-outline-danger btn-block">Log Out 
-          <i class="fa fa-sign-out-alt"></i>
-        </button>
-      </a>
+            <!-- /.row -->
+          </div><!--/. container-fluid -->
+        </form>
+      </section>
+      <!-- /.content -->
     </div>
-  </footer>
+    <!-- /.content-wrapper -->
+
+    <!-- Control Sidebar -->
+    <aside class="control-sidebar control-sidebar-dark">
+      <!-- Control sidebar content goes here -->
+    </aside>
+    <!-- /.control-sidebar -->
+
+    <!-- Main Footer -->
+    <footer class="main-footer">
+      <strong>Copyright &copy; 2024 SkuyBro.</strong>
+      All rights reserved.
+      <div class="float-right d-none d-sm-inline-block">
+        <a href="login.html">
+          <button type="submit" class="btn btn-outline-danger btn-block">Log Out 
+            <i class="fa fa-sign-out-alt"></i>
+          </button>
+        </a>
+      </div>
+    </footer>
+  </div>
 </div>
 <!-- ./wrapper -->
 
@@ -273,6 +317,161 @@
 <script src="dist/js/pages/dashboard2.js"></script>
 <!-- SweetAlert2 -->
 <script src="plugins/sweetalert2/sweetalert2.min.js"></script>
+<!-- alert -->
+<script>
+  $(function() {
+    var Toast = Swal.mixin({
+      toast: true,
+      position: 'top-end',
+      showConfirmButton: false,
+      timer: 3000
+    });
+
+    $('.swalDefaultSuccess').click(function() {
+      Toast.fire({
+        icon: 'success',
+        title: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
+      })
+    });
+    $('.swalDefaultInfo').click(function() {
+      Toast.fire({
+        icon: 'info',
+        title: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
+      })
+    });
+    $('.swalDefaultError').click(function() {
+      Toast.fire({
+        icon: 'error',
+        title: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
+      })
+    });
+    $('.swalDefaultWarning').click(function() {
+      Toast.fire({
+        icon: 'warning',
+        title: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
+      })
+    });
+    $('.swalDefaultQuestion').click(function() {
+      Toast.fire({
+        icon: 'question',
+        title: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
+      })
+    });
+
+    $('.toastrDefaultSuccess').click(function() {
+      toastr.success('Lorem ipsum dolor sit amet, consetetur sadipscing elitr.')
+    });
+    $('.toastrDefaultInfo').click(function() {
+      toastr.info('Lorem ipsum dolor sit amet, consetetur sadipscing elitr.')
+    });
+    $('.toastrDefaultError').click(function() {
+      toastr.error('Lorem ipsum dolor sit amet, consetetur sadipscing elitr.')
+    });
+    $('.toastrDefaultWarning').click(function() {
+      toastr.warning('Lorem ipsum dolor sit amet, consetetur sadipscing elitr.')
+    });
+
+    $('.toastsDefaultDefault').click(function() {
+      $(document).Toasts('create', {
+        title: 'Toast Title',
+        body: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
+      })
+    });
+    $('.toastsDefaultTopLeft').click(function() {
+      $(document).Toasts('create', {
+        title: 'Toast Title',
+        position: 'topLeft',
+        body: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
+      })
+    });
+    $('.toastsDefaultBottomRight').click(function() {
+      $(document).Toasts('create', {
+        title: 'Toast Title',
+        position: 'bottomRight',
+        body: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
+      })
+    });
+    $('.toastsDefaultBottomLeft').click(function() {
+      $(document).Toasts('create', {
+        title: 'Toast Title',
+        position: 'bottomLeft',
+        body: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
+      })
+    });
+    $('.toastsDefaultAutohide').click(function() {
+      $(document).Toasts('create', {
+        title: 'Toast Title',
+        autohide: true,
+        delay: 750,
+        body: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
+      })
+    });
+    $('.toastsDefaultNotFixed').click(function() {
+      $(document).Toasts('create', {
+        title: 'Toast Title',
+        fixed: false,
+        body: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
+      })
+    });
+    $('.toastsDefaultFull').click(function() {
+      $(document).Toasts('create', {
+        body: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.',
+        title: 'Toast Title',
+        subtitle: 'Subtitle',
+        icon: 'fas fa-envelope fa-lg',
+      })
+    });
+    $('.toastsDefaultFullImage').click(function() {
+      $(document).Toasts('create', {
+        body: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.',
+        title: 'Toast Title',
+        subtitle: 'Subtitle',
+        image: '../../dist/img/user3-128x128.jpg',
+        imageAlt: 'User Picture',
+      })
+    });
+    $('.toastsDefaultSuccess').click(function() {
+      $(document).Toasts('create', {
+        class: 'bg-success',
+        title: 'Toast Title',
+        subtitle: 'Subtitle',
+        body: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
+      })
+    });
+    $('.toastsDefaultInfo').click(function() {
+      $(document).Toasts('create', {
+        class: 'bg-info',
+        title: 'Toast Title',
+        subtitle: 'Subtitle',
+        body: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
+      })
+    });
+    $('.toastsDefaultWarning').click(function() {
+      $(document).Toasts('create', {
+        class: 'bg-warning',
+        title: 'Toast Title',
+        subtitle: 'Subtitle',
+        body: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
+      })
+    });
+    $('.toastsDefaultDanger').click(function() {
+      $(document).Toasts('create', {
+        class: 'bg-danger',
+        title: 'Toast Title',
+        subtitle: 'Subtitle',
+        body: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
+      })
+    });
+    $('.toastsDefaultMaroon').click(function() {
+      $(document).Toasts('create', {
+        class: 'bg-maroon',
+        title: 'Toast Title',
+        subtitle: 'Subtitle',
+        body: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
+      })
+    });
+  });
+</script>
 <!-- Bootstrap 4 -->
 <script src="plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
 <!-- Select2 -->
@@ -433,5 +632,192 @@
   }
   // DropzoneJS Demo Code End
 </script>
-</body>
+<script>
+  $(document).ready(function () {
+      // Fungsi untuk menampilkan nama file
+      function showFileName(input) {
+          var fileName = input.val().split('\\').pop();
+          input.next('.custom-file-label').html(fileName);
+      }
+
+      // Handler untuk input file Ijazah
+      $('#ijazahInputFile').on('change', function () {
+          showFileName($(this));
+      });
+
+      // Handler untuk input file Rapor
+      $('#raporInputFile').on('change', function () {
+          showFileName($(this));
+      });
+  });
+</script>
+<script>
+  document.getElementById('telp_siswa').addEventListener('input', function (e) {
+      if (this.value.length > this.maxLength) {
+          this.value = this.value.slice(0, this.maxLength);
+      }
+  });
+  document.getElementById('telp_ortu').addEventListener('input', function (e) {
+      if (this.value.length > this.maxLength) {
+          this.value = this.value.slice(0, this.maxLength);
+      }
+  });
+</script>
+<!-- SweetAlert2 -->
+<script src="plugins/sweetalert2/sweetalert2.min.js"></script>
+<!-- alert -->
+<script>
+  $(function() {
+    var Toast = Swal.mixin({
+      toast: true,
+      position: 'top-end',
+      showConfirmButton: false,
+      timer: 3000
+    });
+
+    $('.swalDefaultSuccess').click(function() {
+      Toast.fire({
+        icon: 'success',
+        title: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
+      })
+    });
+    $('.swalDefaultInfo').click(function() {
+      Toast.fire({
+        icon: 'info',
+        title: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
+      })
+    });
+    $('.swalDefaultError').click(function() {
+      Toast.fire({
+        icon: 'error',
+        title: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
+      })
+    });
+    $('.swalDefaultWarning').click(function() {
+      Toast.fire({
+        icon: 'warning',
+        title: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
+      })
+    });
+    $('.swalDefaultQuestion').click(function() {
+      Toast.fire({
+        icon: 'question',
+        title: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
+      })
+    });
+
+    $('.toastrDefaultSuccess').click(function() {
+      toastr.success('Lorem ipsum dolor sit amet, consetetur sadipscing elitr.')
+    });
+    $('.toastrDefaultInfo').click(function() {
+      toastr.info('Lorem ipsum dolor sit amet, consetetur sadipscing elitr.')
+    });
+    $('.toastrDefaultError').click(function() {
+      toastr.error('Lorem ipsum dolor sit amet, consetetur sadipscing elitr.')
+    });
+    $('.toastrDefaultWarning').click(function() {
+      toastr.warning('Lorem ipsum dolor sit amet, consetetur sadipscing elitr.')
+    });
+
+    $('.toastsDefaultDefault').click(function() {
+      $(document).Toasts('create', {
+        title: 'Toast Title',
+        body: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
+      })
+    });
+    $('.toastsDefaultTopLeft').click(function() {
+      $(document).Toasts('create', {
+        title: 'Toast Title',
+        position: 'topLeft',
+        body: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
+      })
+    });
+    $('.toastsDefaultBottomRight').click(function() {
+      $(document).Toasts('create', {
+        title: 'Toast Title',
+        position: 'bottomRight',
+        body: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
+      })
+    });
+    $('.toastsDefaultBottomLeft').click(function() {
+      $(document).Toasts('create', {
+        title: 'Toast Title',
+        position: 'bottomLeft',
+        body: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
+      })
+    });
+    $('.toastsDefaultAutohide').click(function() {
+      $(document).Toasts('create', {
+        title: 'Toast Title',
+        autohide: true,
+        delay: 750,
+        body: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
+      })
+    });
+    $('.toastsDefaultNotFixed').click(function() {
+      $(document).Toasts('create', {
+        title: 'Toast Title',
+        fixed: false,
+        body: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
+      })
+    });
+    $('.toastsDefaultFull').click(function() {
+      $(document).Toasts('create', {
+        body: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.',
+        title: 'Toast Title',
+        subtitle: 'Subtitle',
+        icon: 'fas fa-envelope fa-lg',
+      })
+    });
+    $('.toastsDefaultFullImage').click(function() {
+      $(document).Toasts('create', {
+        body: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.',
+        title: 'Toast Title',
+        subtitle: 'Subtitle',
+        image: '../../dist/img/user3-128x128.jpg',
+        imageAlt: 'User Picture',
+      })
+    });
+    $('.toastsDefaultSuccess').click(function() {
+      $(document).Toasts('create', {
+        class: 'bg-success',
+        title: 'Toast Title',
+        subtitle: 'Subtitle',
+        body: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
+      })
+    });
+    $('.toastsDefaultInfo').click(function() {
+      $(document).Toasts('create', {
+        class: 'bg-info',
+        title: 'Toast Title',
+        subtitle: 'Subtitle',
+        body: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
+      })
+    });
+    $('.toastsDefaultWarning').click(function() {
+      $(document).Toasts('create', {
+        class: 'bg-warning',
+        title: 'Toast Title',
+        subtitle: 'Subtitle',
+        body: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
+      })
+    });
+    $('.toastsDefaultDanger').click(function() {
+      $(document).Toasts('create', {
+        class: 'bg-danger',
+        title: 'Toast Title',
+        subtitle: 'Subtitle',
+        body: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
+      })
+    });
+    $('.toastsDefaultMaroon').click(function() {
+      $(document).Toasts('create', {
+        class: 'bg-maroon',
+        title: 'Toast Title',
+        subtitle: 'Subtitle',
+        body: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
+      })
+    });
+  });
+</script>
 </html>
