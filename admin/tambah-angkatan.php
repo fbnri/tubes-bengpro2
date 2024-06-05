@@ -181,7 +181,7 @@ if(isset($_POST['tambah'])){
     <strong>Copyright &copy; 2024 SkuyBro.</strong>
     All rights reserved.
     <div class="float-right d-none d-sm-inline-block">
-      <a href="login.html">
+      <a href="logout.html">
         <button type="submit" class="btn btn-outline-danger btn-block">Log Out 
           <i class="fa fa-sign-out-alt"></i>
         </button>

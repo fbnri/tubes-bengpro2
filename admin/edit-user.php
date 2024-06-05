@@ -1,6 +1,8 @@
 <?php
 
 include("koneksi.php");
+session_start();
+$nama = $_SESSION['nama_lengkap'];
 
 $id = $_GET['id'];
 $sql = "SELECT * FROM user WHERE id='$id'";
@@ -10,7 +12,7 @@ $data = mysqli_fetch_array($result);
 if(isset($_POST['edit'])){
   $nama_lengkap = $_POST['nama_lengkap'];
   $username = $_POST['username'];
-  $password = $_POST['password'];
+  $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
   $status = $_POST['status'];
 
   $sql = "UPDATE user set nama_lengkap='$nama_lengkap', username='$username', password='$password', status='$status' WHERE id='$id'";
@@ -155,17 +157,7 @@ if(isset($_POST['edit'])){
   <!-- /.control-sidebar -->
 
   <!-- Main Footer -->
-  <footer class="main-footer">
-    <strong>Copyright &copy; 2024 SkuyBro.</strong>
-    All rights reserved.
-    <div class="float-right d-none d-sm-inline-block">
-      <a href="login.html">
-        <button type="submit" class="btn btn-outline-danger btn-block">Log Out 
-          <i class="fa fa-sign-out-alt"></i>
-        </button>
-      </a>
-    </div>
-  </footer>
+  <?php include("footer.php") ?>
 </div>
 <!-- ./wrapper -->
 
