@@ -1,51 +1,47 @@
 <?php
 
 include("koneksi.php");
+session_start();
 
-if(isset($_POST['tambah'])) {
+if (!isset($_SESSION['user_id'])) {
+  header("location: login.php");
+  exit();
+}
 
-  if (isset($_FILES['ijazah']['name']))
-        {
-          // data siswa
-          $nama_siswa = $_POST['nama_siswa'];
-          $ttl = $_POST['ttl'];
-          $jk = $_POST['jk'];
-          $alamat = $_POST['alamat'];
-          $telp_siswa = $_POST['telp_siswa'];
-          $agama = $_POST['agama'];
-          $asal_sekolah = $_POST['asal_sekolah'];
-          $ijazah = $_POST['ijazah'];
-          $rapor = $_POST['rapor'];
-          
-          // data orang tua
-          $nama_ortu = $_POST['nama_ortu'];
-          $pekerjaan = $_POST['pekerjaan'];
-          $telp_ortu = $_POST['telp_ortu'];
-          $pendidikan = $_POST['pendidikan'];
+if(isset($_POST['submit'])) {
+  $nama_siswa = $_POST['nama_siswa'];
+  $ttl = $_POST['ttl'];
+  $jk = $_POST['jk'];
+  $alamat = $_POST['alamat'];
+  $telp_siswa = $_POST['telp_siswa'];
+  $agama = $_POST['agama'];
+  $asal_sekolah = $_POST['asal_sekolah'];
+  $ijazah = $_FILES['ijazah']['name'];
+  $rapor = $_FILES['rapor']['name'];
+  $prestasi = $_FILES['prestasi']['name'];
+  $nama_ortu = $_POST['nama_ortu'];
+  $pekerjaan = $_POST['pekerjaan'];
+  $telp_ortu = $_POST['telp_ortu'];
+  $pendidikan = $_POST['pendidikan'];
 
-          $file_name = $_FILES['ijazah']['name'];
-          $file_tmp = $_FILES['ijazah']['tmp_name'];
+  // Simpan file yang diunggah
+  move_uploaded_file($_FILES['ijazah']['tmp_name'], "../ijazah/" . $ijazah);
+  move_uploaded_file($_FILES['rapor']['tmp_name'], "../rapor/" . $rapor);
+  move_uploaded_file($_FILES['prestasi']['tmp_name'], "../prestasi/" . $prestasi);
 
-          move_uploaded_file($file_tmp,"../pdf/".$file_name);
+  $sql = "INSERT INTO pendaftar_reguler (nama_siswa, ttl, jk, alamat, telp_siswa, agama, asal_sekolah, ijazah, rapor, prestasi, nama_ortu, pekerjaan, telp_ortu, pendidikan) VALUES ('$nama_siswa', '$ttl', '$jk', '$alamat', '$telp_siswa', '$agama', '$asal_sekolah', '$ijazah', '$rapor', '$prestasi', '$nama_ortu', '$pekerjaan', '$telp_ortu', '$pendidikan')";
 
-          $sql = 
-          "INSERT INTO pendaftar_reguler (nama_siswa, ttl, jk, alamat, telp_siswa, agama, asal_sekolah, ijazah, rapor, nama_ortu, pekerjaan, telp_ortu, pendidikan) VALUES ('$nama_siswa', '$ttl', '$jk', '$alamat','$telp_siswa', '$agama', '$asal_sekolah', '$ijazah', '$rapor', '$nama_ortu', '$pekerjaan', '$telp_ortu', '$pendidikan')";
-          $query = mysqli_query($link, $sql);
-        }
-
-  // $sql = "INSERT INTO pendaftar_reguler (nama_siswa, ttl, jk, alamat, telp_siswa, agama, asal_sekolah, ijazah, rapor, nama_ortu, pekerjaan, telp_ortu, pendidikan) VALUES ('$nama_siswa', '$ttl', '$jk', '$alamat','$telp_siswa', '$agama', '$asal_sekolah', '$ijazah', '$rapor', '$nama_ortu', '$pekerjaan', '$telp_ortu', '$pendidikan')";
-
-  if (mysqli_query($link, $sql)){
-    session_start();
-    $_SESSION['success'] = "Berhasil menambahkan data!";
+  if (mysqli_query($link, $sql)) {
+    $_SESSION['success'] = "Pendaftaran berhasil!";
     header("Location: index.php");
     exit();
   } else {
-    echo "Gagal: " . $sql . "<br>" . mysqli_error($link);
+    echo "Error: " . $sql . "<br>" . mysqli_error($link);
   }
 }
-
 ?>
+
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -87,212 +83,245 @@ if(isset($_POST['tambah'])) {
   <link rel="stylesheet" href="plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css">
 </head>
 
-<div class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed">
-  <div class="wrapper">
-
-    <!-- Preloader -->
-    <div class="preloader flex-column justify-content-center align-items-center">
-      <img class="animation__wobble" src="dist/img/logo-smktelkom.png" alt="SMK Telkom" height="60" width="60">
-    </div>
-
-    <!-- Navbar -->
-    <?php include("navbar.php") ?>
-    <!-- /.navbar -->
-
-    <!-- Main Sidebar Container -->
-    <?php include('sidebar.php') ?>
-
-    <!-- Content Wrapper. Contains page content -->
-    <div class="content-wrapper">
-      <!-- Content Header (Page header) -->
-      <div class="content-header">
-        <div class="container-fluid">
-          <div class="row mb-2">
-            <div class="col-sm-6">
-              <h1 class="m-0"><strong>Formulir Pendaftaran Jalur Reguler</strong></h1>
-            </div><!-- /.col -->
-          </div><!-- /.row -->
-        </div><!-- /.container-fluid -->
+<body>
+  <div class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed">
+    <div class="wrapper">
+  
+      <!-- Preloader -->
+      <div class="preloader flex-column justify-content-center align-items-center">
+        <img class="animation__wobble" src="dist/img/logo-smktelkom.png" alt="SMK Telkom" height="60" width="60">
       </div>
-      <!-- /.content-header -->
-
-      <!-- Main content -->
-      <section class="content">
-        <form action="" method="post" enctype="multipart/form-data">
-          <div class="container-fluid">
-            <!-- Info boxes -->
-            <div class="row">
-              <div class="col-md-12">
-                <div class="card card-secondary">
-                  <div class="card-header">
-                    <h3 class="card-title">Data Diri</h3>
-      
-                    <div class="card-tools">
-                      <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i>
-                      </button>
-                    </div>
-                    <!-- /.card-tools -->
-                  </div>
-                  <!-- /.card-header -->
-                  <div class="card-body">
-                    <div class="card-body">
-                      <div class="form-group">
-                        <label for="exampleInputEmail1">Nama Lengkap</label>
-                        <input type="text" name="nama_siswa" class="form-control" id="exampleInputEmail1">
-                      </div>
-                      <div class="form-group">
-                        <label>Tempat, Tanggal Lahir</label>
-                        <div class="input-group date" id="reservationdate" data-target-input="nearest">
-                          <input type="text" name="ttl" class="form-control datetimepicker-input" data-target="#reservationdate"/>
-                          <div class="input-group-append" data-target="#reservationdate" data-toggle="datetimepicker">
-                              <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="form-group">
-                        <label>Jenis Kelamin</label>
-                        <div class="input-group">
-                          <select class="form-control select1" name="jk">
-                            <option disabled="disabled" selected="selected">Pilih</option>
-                            <option value="laki-laki">Laki-Laki</option>
-                            <option value="perempuan">Perempuan</option>
-                          </select>
-                        </div>
-                      </div>
-                      <div class="form-group">
-                        <label for="exampleInputPassword1">Alamat Lengkap</label>
-                        <textarea class="form-control" name="alamat" id=""></textarea>
-                      </div>
-                      <div class="form-group">
-                        <label for="exampleInputPassword1">No. Telp/HP</label>
-                        <input type="number" id="telp_siswa" maxlength="12" name="telp_siswa" class="form-control" id="exampleInputPassword1">
-                      </div>
-                      <div class="form-group">
-                        <label>Agama</label>
-                        <div class="input-group">
-                          <select class="form-control select1" name="agama">
-                            <option disabled="disabled" selected="selected">Pilih</option>
-                            <option value="islam">Islam</option>
-                            <option value="protestan">Protestan</option>
-                            <option value="katolik">Katolik</option>
-                            <option value="hindu">Hindu</option>
-                            <option value="buddha">Buddha</option>
-                            <option value="konghucu">Konghucu</option>
-                          </select>
-                        </div>
-                      </div>
-                      <div class="form-group">
-                        <label for="exampleInputPassword1">Asal Sekolah</label>
-                        <input type="text" name="asal_sekolah" class="form-control" id="exampleInputPassword1">
-                      </div>
-                      <div class="form-group">
-                        <label for="ijazahInputFile">Ijazah</label>
-                        <div class="input-group">
-                          <div class="custom-file">
-                            <input type="file" name="ijazah" class="custom-file-input" id="ijazahInputFile" accept=".pdf">
-                            <label class="custom-file-label" for="ijazahInputFile">Pilih file</label>
-                          </div>
-                          </div>
-                      </div>
-                      <div class="form-group">
-                        <label for="raporInputFile">Rapor</label>
-                        <div class="input-group">
-                          <div class="custom-file">
-                            <input type="file" name="rapor" class="custom-file-input" id="raporInputFile" accept=".pdf">
-                            <label class="custom-file-label" for="raporInputFile">Pilih file</label>
-                          </div>
-                      </div>
-                    </div>
-                    </div>
-                    <!-- /.card-body -->
-                  </div>
-                  <!-- /.card-body -->
-                </div>
-                <!-- /.card -->
-              </div>
-              <div class="col-md-12">
-                <div class="card card-secondary">
-                  <div class="card-header">
-                    <h3 class="card-title">Data Orang Tua</h3>
-      
-                    <div class="card-tools">
-                      <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i>
-                      </button>
-                    </div>
-                    <!-- /.card-tools -->
-                  </div>
-                  <!-- /.card-header -->
-                  <div class="card-body">
-                    <div class="card-body">
-                      <div class="form-group">
-                        <label for="exampleInputEmail1">Nama Lengkap Orang Tua/Wali</label>
-                        <input type="text" name="nama_ortu" class="form-control" id="exampleInputEmail1">
-                      </div>
-                      <div class="form-group">
-                        <label for="exampleInputEmail1">Pekerjaan Orang Tua</label>
-                        <input type="text" name="pekerjaan" class="form-control" id="exampleInputEmail1">
-                      </div>
-                      <div class="form-group">
-                        <label for="exampleInputPassword1">No. Telp/HP Orang Tua/Wali</label>
-                        <input type="number" id="telp_ortu" maxlength="12" name="telp_ortu" class="form-control" id="exampleInputPassword1">
-                      </div>
-                      <div class="form-group">
-                        <label>Pendidikan Terakhir Orang Tua/Wali</label>
-                        <div class="input-group">
-                          <select class="form-control select1" name="pendidikan">
-                            <option disabled="disabled" selected="selected">Pilih</option>
-                            <option value="SD">SD</option>
-                            <option value="SMP">SMP</option>
-                            <option value="SMA/SMK">SMA/SMK</option>
-                            <option value="D3">D3</option>
-                            <option value="S1/D4">S1/D4</option>
-                            <option value="S2">S2</option>
-                            <option value="S3">S3</option>
-                          </select>
-                        </div>
-                      </div>
-                    </div>
-                    <!-- /.card-body -->
-                  </div>
-                  <!-- /.card-body -->
-                </div>
-                <div class="card-footer mb-4">
-                  <button type="submit" name="tambah" class="btn btn-success form-control">
-                    <i class="fa fa-check"></i>
-                  </button>
-                </div>
-                <!-- /.card -->
-              </div>
-            </div>
-            <!-- /.row -->
-          </div><!--/. container-fluid -->
-        </form>
-      </section>
-      <!-- /.content -->
-    </div>
-    <!-- /.content-wrapper -->
-
-    <!-- Control Sidebar -->
-    <aside class="control-sidebar control-sidebar-dark">
-      <!-- Control sidebar content goes here -->
-    </aside>
-    <!-- /.control-sidebar -->
-
-    <!-- Main Footer -->
-    <footer class="main-footer">
-      <strong>Copyright &copy; 2024 SkuyBro.</strong>
-      All rights reserved.
-      <div class="float-right d-none d-sm-inline-block">
-        <a href="login.html">
-          <button type="submit" class="btn btn-outline-danger btn-block">Log Out 
-            <i class="fa fa-sign-out-alt"></i>
+  
+      <!-- Navbar -->
+      <nav class="main-header navbar navbar-expand navbar-dark">
+    <!-- Left navbar links -->
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+      </li>
+      <li class="nav-item">
+        <a href="index.php">
+          <button type="button" class="btn btn-warning btn-block">
+          <i class="fas fa-chevron-left"></i>
+            <span class="m-1"> Kembali</span> 
           </button>
         </a>
+      </li>
+    </ul>
+
+    <!-- Right navbar links -->
+    <ul class="navbar-nav ml-auto">
+
+      <!-- Messages Dropdown Menu -->
+      <li class="nav-item">
+        <a class="nav-link" data-widget="fullscreen" href="#" role="button">
+          <i class="fas fa-expand-arrows-alt"></i>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" data-widget="control-sidebar" data-slide="true" href="#" role="button">
+          <i class="fas fa-th-large"></i>
+        </a>
+      </li>
+    </ul>
+  </nav>
+      <!-- /.navbar -->
+  
+      <!-- Main Sidebar Container -->
+      <?php include('sidebar.php') ?>
+  
+      <!-- Content Wrapper. Contains page content -->
+      <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <div class="content-header">
+          <div class="container-fluid">
+            <div class="row mb-2">
+              <div class="col-sm-6">
+                <h1 class="m-0"><strong>Formulir Pendaftaran Jalur Reguler</strong></h1>
+              </div><!-- /.col -->
+            </div><!-- /.row -->
+          </div><!-- /.container-fluid -->
+        </div>
+        <!-- /.content-header -->
+  
+        <!-- Main content -->
+        <section class="content">
+          <form action="" method="post" enctype="multipart/form-data">
+            <div class="container-fluid">
+              <!-- Info boxes -->
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="card card-secondary">
+                    <div class="card-header">
+                      <h3 class="card-title">Data Diri</h3>
+        
+                      <div class="card-tools">
+                        <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i>
+                        </button>
+                      </div>
+                      <!-- /.card-tools -->
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                      <div class="card-body">
+                        <div class="form-group">
+                          <label for="exampleInputEmail1">Nama Lengkap</label>
+                          <input type="text" name="nama_siswa" class="form-control" id="exampleInputEmail1">
+                        </div>
+                        <div class="form-group">
+                          <label>Tempat, Tanggal Lahir</label>
+                          <div class="input-group date" id="reservationdate" data-target-input="nearest">
+                            <input type="text" name="ttl" class="form-control datetimepicker-input" data-target="#reservationdate"/>
+                            <div class="input-group-append" data-target="#reservationdate" data-toggle="datetimepicker">
+                                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="form-group">
+                          <label>Jenis Kelamin</label>
+                          <div class="input-group">
+                            <select class="form-control select1" name="jk">
+                              <option disabled="disabled" selected="selected">Pilih</option>
+                              <option value="laki-laki">Laki-Laki</option>
+                              <option value="perempuan">Perempuan</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div class="form-group">
+                          <label for="exampleInputPassword1">Alamat Lengkap</label>
+                          <textarea class="form-control" name="alamat" id=""></textarea>
+                        </div>
+                        <div class="form-group">
+                          <label for="exampleInputPassword1">No. Telp/HP</label>
+                          <input type="number" id="telp_siswa" maxlength="12" name="telp_siswa" class="form-control" id="exampleInputPassword1">
+                        </div>
+                        <div class="form-group">
+                          <label>Agama</label>
+                          <div class="input-group">
+                            <select class="form-control select1" name="agama">
+                              <option disabled="disabled" selected="selected">Pilih</option>
+                              <option value="islam">Islam</option>
+                              <option value="protestan">Protestan</option>
+                              <option value="katolik">Katolik</option>
+                              <option value="hindu">Hindu</option>
+                              <option value="buddha">Buddha</option>
+                              <option value="konghucu">Konghucu</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div class="form-group">
+                          <label for="exampleInputPassword1">Asal Sekolah</label>
+                          <input type="text" name="asal_sekolah" class="form-control" id="exampleInputPassword1">
+                        </div>
+                        <div class="form-group">
+                          <label for="ijazahInputFile">Ijazah</label>
+                          <div class="input-group">
+                            <div class="custom-file">
+                              <input type="file" name="ijazah" class="custom-file-input" id="ijazahInputFile" accept=".pdf">
+                              <label class="custom-file-label" for="ijazahInputFile">Pilih file</label>
+                            </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                          <label for="raporInputFile">Rapor</label>
+                          <div class="input-group">
+                            <div class="custom-file">
+                              <input type="file" name="rapor" class="custom-file-input" id="raporInputFile" accept=".pdf">
+                              <label class="custom-file-label" for="raporInputFile">Pilih file</label>
+                            </div>
+                        </div>
+                      </div>
+                      </div>
+                      <!-- /.card-body -->
+                    </div>
+                    <!-- /.card-body -->
+                  </div>
+                  <!-- /.card -->
+                </div>
+                <div class="col-md-12">
+                  <div class="card card-secondary">
+                    <div class="card-header">
+                      <h3 class="card-title">Data Orang Tua</h3>
+        
+                      <div class="card-tools">
+                        <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i>
+                        </button>
+                      </div>
+                      <!-- /.card-tools -->
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                      <div class="card-body">
+                        <div class="form-group">
+                          <label for="exampleInputEmail1">Nama Lengkap Orang Tua/Wali</label>
+                          <input type="text" name="nama_ortu" class="form-control" id="exampleInputEmail1">
+                        </div>
+                        <div class="form-group">
+                          <label for="exampleInputEmail1">Pekerjaan Orang Tua</label>
+                          <input type="text" name="pekerjaan" class="form-control" id="exampleInputEmail1">
+                        </div>
+                        <div class="form-group">
+                          <label for="exampleInputPassword1">No. Telp/HP Orang Tua/Wali</label>
+                          <input type="number" id="telp_ortu" maxlength="12" name="telp_ortu" class="form-control" id="exampleInputPassword1">
+                        </div>
+                        <div class="form-group">
+                          <label>Pendidikan Terakhir Orang Tua/Wali</label>
+                          <div class="input-group">
+                            <select class="form-control select1" name="pendidikan">
+                              <option disabled="disabled" selected="selected">Pilih</option>
+                              <option value="SD">SD</option>
+                              <option value="SMP">SMP</option>
+                              <option value="SMA/SMK">SMA/SMK</option>
+                              <option value="D3">D3</option>
+                              <option value="S1/D4">S1/D4</option>
+                              <option value="S2">S2</option>
+                              <option value="S3">S3</option>
+                            </select>
+                          </div>
+                        </div>
+                      </div>
+                      <!-- /.card-body -->
+                    </div>
+                    <!-- /.card-body -->
+                  </div>
+                  <div class="card-footer mb-4">
+                    <button type="submit" name="submit" class="btn btn-success form-control">
+                      <i class="fa fa-check"></i>
+                    </button>
+                  </div>
+                  <!-- /.card -->
+                </div>
+              </div>
+              <!-- /.row -->
+            </div><!--/. container-fluid -->
+          </form>
+        </section>
+        <!-- /.content -->
       </div>
-    </footer>
+      <!-- /.content-wrapper -->
+  
+      <!-- Control Sidebar -->
+      <aside class="control-sidebar control-sidebar-dark">
+        <!-- Control sidebar content goes here -->
+      </aside>
+      <!-- /.control-sidebar -->
+  
+      <!-- Main Footer -->
+      <footer class="main-footer">
+        <strong>Copyright &copy; 2024 SkuyBro.</strong>
+        All rights reserved.
+        <div class="float-right d-none d-sm-inline-block">
+          <a href="login.html">
+            <button type="submit" class="btn btn-outline-danger btn-block">Log Out 
+              <i class="fa fa-sign-out-alt"></i>
+            </button>
+          </a>
+        </div>
+      </footer>
+    </div>
   </div>
-</div>
-<!-- ./wrapper -->
+  <!-- ./wrapper -->
+
 
 <!-- REQUIRED SCRIPTS -->
 <!-- jQuery -->
@@ -820,4 +849,5 @@ if(isset($_POST['tambah'])) {
     });
   });
 </script>
+</body>
 </html>
