@@ -13,7 +13,7 @@
           <img src="dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
         </div>
         <div class="info">
-          <a href="#" class="d-block">Alexander Pierce</a>
+          <a href="#" class="d-block"><?php echo $_SESSION["nama_lengkap"]; ?></a>
         </div>
       </div>
       
@@ -57,7 +57,7 @@
             </ul>
           </li>
           <li class="nav-item mt-lg-5">
-            <a href="login.php">
+            <a href="logout.php">
               <button type="button" class="btn btn-danger btn-group-sm">
                 <span class="m-sm-1">Log Out</span> 
                 <i class="fa fa-sign-out-alt"></i>

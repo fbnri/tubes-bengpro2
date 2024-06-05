@@ -1,3 +1,31 @@
+<?php
+
+include("koneksi.php");
+session_start();
+error_reporting(0);
+
+if (isset($_SESSION['username'])) {
+  header("location: index2.php");
+}
+
+$alert = "Masukan username dan password";
+if(isset($_POST['masuk'])) {
+
+  $sql = "SELECT * FROM user where username='{$_POST['username']}' limit 1";
+
+  $result = mysqli_query($link, $sql);
+  $data = mysqli_fetch_array($result);
+
+  if(!password_verify($_POST['password'], $data['password'])) {
+    $alert = "Username / Password Salah";
+  } else {
+  $_SESSION['nama_lengkap'] = $data['nama_lengkap'];
+  header("Location: index2.php"); 
+  }
+}
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -19,14 +47,14 @@
   <!-- /.login-logo -->
   <div class="card card-outline card-primary">
     <div class="card-header text-center">
-      <a href="index2.php" class="h1"><b>LOG</b>IN</a>
+      <a href="login.php" class="h1"><b>LOG</b>IN</a>
     </div>
     <div class="card-body">
-      <p class="login-box-msg">Sign in to start your session</p>
+      <p class="login-box-msg"><?php echo $alert ?></p>
 
-      <form action="index2.php" method="post">
+      <form action="" method="post">
         <div class="input-group mb-3">
-          <input type="email" class="form-control" placeholder="Email">
+          <input type="text" name="username" class="form-control" placeholder="Username">
           <div class="input-group-append">
             <div class="input-group-text">
               <span class="fas fa-user"></span>
@@ -34,7 +62,7 @@
           </div>
         </div>
         <div class="input-group mb-3">
-          <input type="password" class="form-control" placeholder="Password">
+          <input type="password" name="password" class="form-control" placeholder="Password">
           <div class="input-group-append">
             <div class="input-group-text">
               <span class="fas fa-lock"></span>
@@ -46,15 +74,12 @@
           </div>
           <!-- /.col -->
           <div class="col-4">
-            <button type="submit" class="btn btn-primary btn-block">Masuk</button>
+            <button type="submit" name="masuk" class="btn btn-primary btn-block">Masuk</button>
           </div>
           <!-- /.col -->
         </div>
       </form>
 
-      <p class="mb-0">
-        <a href="register.php" class="text-center">Belum punya akun?</a>
-      </p>
     </div>
     <!-- /.card-body -->
   </div>

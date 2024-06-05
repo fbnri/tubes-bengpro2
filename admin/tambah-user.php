@@ -1,11 +1,14 @@
 <?php
 
 include("koneksi.php");
+error_reporting(0);
+session_start();
+$nama = $_SESSION['nama_lengkap'];
 
 if(isset($_POST['tambah'])){
   $nama_lengkap = $_POST['nama_lengkap'];
   $username = $_POST['username'];
-  $password = $_POST['password'];
+  $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
   $status = $_POST['status'];
 
   $sql = "INSERT INTO user (nama_lengkap, username, password, status) VALUES ('$nama_lengkap', '$username', '$password', '$status')";
@@ -150,17 +153,7 @@ if(isset($_POST['tambah'])){
   <!-- /.control-sidebar -->
 
   <!-- Main Footer -->
-  <footer class="main-footer">
-    <strong>Copyright &copy; 2024 SkuyBro.</strong>
-    All rights reserved.
-    <div class="float-right d-none d-sm-inline-block">
-      <a href="login.html">
-        <button type="submit" class="btn btn-outline-danger btn-block">Log Out 
-          <i class="fa fa-sign-out-alt"></i>
-        </button>
-      </a>
-    </div>
-  </footer>
+  <?php include("footer.php") ?>
 </div>
 <!-- ./wrapper -->
 
