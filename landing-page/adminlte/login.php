@@ -2,26 +2,48 @@
 include("koneksi.php");
 session_start();
 
-// Jika pengguna sudah login, arahkan ke halaman utama
+// Jika pengguna sudah login, arahkan ke halaman yang sesuai
 if (isset($_SESSION['user_id'])) {
-  header("location: index.php");
+  $user_id = $_SESSION['user_id'];
+  // Periksa apakah pengguna sudah mengisi formulir
+  $sql = "SELECT * FROM pendaftar_reguler WHERE user_id='$user_id' LIMIT 1";
+  $result = mysqli_query($link, $sql);
+  
+  if (mysqli_num_rows($result) == 1) {
+    // Jika sudah mengisi, arahkan ke halaman index
+    header("Location: index.php");
+  } else {
+    // Jika belum mengisi, arahkan ke halaman form-reguler
+    header("Location: form-reguler.php");
+  }
   exit();
 }
 
 $alert = "Masukkan username dan password";
-if(isset($_POST['masuk'])) {
+if (isset($_POST['masuk'])) {
   // Ambil data pengguna dari database berdasarkan username yang dimasukkan
   $sql = "SELECT * FROM user_pendaftar WHERE username='{$_POST['username']}' LIMIT 1";
   $result = mysqli_query($link, $sql);
   
-  if(mysqli_num_rows($result) == 1) {
+  if (mysqli_num_rows($result) == 1) {
     $data = mysqli_fetch_array($result);
     // Periksa apakah password yang dimasukkan cocok dengan hash yang disimpan di database
-    if(password_verify($_POST['password'], $data['password'])) {
-      // Jika cocok, atur sesi pengguna dan arahkan ke halaman utama
+    if (password_verify($_POST['password'], $data['password'])) {
+      // Jika cocok, atur sesi pengguna
       $_SESSION['user_id'] = $data['id'];
       $_SESSION['nama_lengkap'] = $data['nama_lengkap'];
-      header("Location: index.php");
+      
+      // Periksa apakah pengguna sudah mengisi formulir
+      $sql = "SELECT * FROM pendaftar_reguler WHERE user_id='{$data['id']}' LIMIT 1";
+      $result = mysqli_query($link, $sql);
+      
+      if (mysqli_num_rows($result) == 1) {
+        // Jika sudah mengisi, arahkan ke halaman index
+        header("Location: index.php");
+      } else {
+        // Jika belum mengisi, arahkan ke halaman form-reguler
+        header("Location: form-reguler.php");
+      }
       exit();
     } else {
       // Jika password tidak cocok, tampilkan pesan kesalahan
@@ -66,7 +88,7 @@ if(isset($_POST['masuk'])) {
 
 <body class="hold-transition login-page">
 <div class="login-box">
-  <!-- /.login-logo -->
+    <!-- /.login-logo -->
   <div class="card card-outline card-primary">
     <div class="card-header text-center">
       <a href="#" class="h1"><b>LOG</b>IN</a>
@@ -108,6 +130,13 @@ if(isset($_POST['masuk'])) {
     </div>
     <!-- /.card-body -->
   </div>
+  <div class="text-center mt-3">
+    <a href="../index.html">
+      <button type="button" class="btn btn-info btn-group-sm">
+        <i class="fa fa-chevron-plus"></i>
+        <span class="m-sm-3">Home</span>
+      </button>
+    </a>
   <!-- /.card -->
 </div>
 <!-- /.login-box -->
