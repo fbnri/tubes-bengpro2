@@ -5,6 +5,20 @@ if (!isset($_SESSION['nama_lengkap'])) {
   header("location: login.php");
 }
 
+include("koneksi.php");
+
+$sql = "SELECT COUNT(*) AS total_pendaftar FROM pendaftar_reguler";
+$result = mysqli_query($link, $sql);
+
+if ($result) {
+  // Ambil jumlah pendaftar dari hasil query
+  $row = mysqli_fetch_assoc($result);
+  $total_pendaftar = $row['total_pendaftar'];
+} else {
+  // Jika terjadi kesalahan dalam query, set total pendaftar ke 0
+  $total_pendaftar = 0;
+}
+
 ?>
 
 
@@ -198,7 +212,7 @@ if (!isset($_SESSION['nama_lengkap'])) {
 
                 <div class="info-box-content">
                   <span class="info-box-text">Calon Angkatan 2023-2024</span>
-                  <span class="info-box-number">272 pendaftar</span>
+                  <span class="info-box-number"><?php echo $total_pendaftar; ?> pendaftar</span>
                 </div>
                 <!-- /.info-box-content -->
               </div>

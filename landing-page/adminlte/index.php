@@ -1,17 +1,25 @@
 <?php
-
 include("koneksi.php");
 session_start();
 
+// Jika pengguna belum login, arahkan ke halaman login
 if (!isset($_SESSION['user_id'])) {
-  header("location: login.php");
+  header("Location: login.php");
   exit();
 }
 
 $user_id = $_SESSION['user_id'];
-$sql = "SELECT * FROM pendaftar_reguler WHERE user_id = '$user_id'";
+// Periksa apakah pengguna sudah mengisi formulir
+$sql = "SELECT * FROM pendaftar_reguler WHERE user_id='$user_id' LIMIT 1";
 $result = mysqli_query($link, $sql);
 
+if (mysqli_num_rows($result) == 0) {
+  // Jika belum mengisi formulir, arahkan ke halaman form-reguler
+  header("Location: form-reguler.php");
+  exit();
+}
+
+// Konten halaman utama
 ?>
 
 <!DOCTYPE html>
@@ -76,20 +84,11 @@ $result = mysqli_query($link, $sql);
         <div class="row">
           <div class="col-12">
             <div class="card">
-              <div class="card-header">
-                <a href="form-reguler.php">
-                  <button type="button" class="btn btn-info btn-group-sm">
-                    <i class="fa fa-plus"></i>
-                    <span class="m-sm-3">Tambah</span>
-                  </button>
-                </a>
-              </div>
               <!-- /.card-header -->
               <div class="card-body">
                 <table id="example1" class="table table-hover">
                   <thead>
                   <tr>
-                    <th>No</th>
                     <th>Nama Siswa</th>
                     <th>TTL</th>
                     <th>Jenis Kelamin</th>
@@ -99,19 +98,17 @@ $result = mysqli_query($link, $sql);
                     <th>Asal Sekolah</th>
                     <th>Ijazah</th>
                     <th>Rapor</th>
+                    <th>Prestasi</th>
                     <th>Nama Ortu</th>
                     <th>Pekerjaan</th>
                     <th>No. Telp/HP Ortu</th>
                     <th>Pendidikan</th>
+                    <th>Aksi</th>
                   </tr>
                   </thead>
                   <tbody>
-                    <?php
-                    $no = 1;
-                    while($data = mysqli_fetch_array($result)) :
-                    ?>
+                    <?php while($data = mysqli_fetch_array($result)) : ?>
                     <tr>
-                      <td><?= $no ?></td>
                       <td><?= $data['nama_siswa'] ?></td>
                       <td><?= $data['ttl'] ?></td>
                       <td><?= $data['jk'] ?></td>
@@ -120,23 +117,25 @@ $result = mysqli_query($link, $sql);
                       <td><?= $data['agama'] ?></td>
                       <td><?= $data['asal_sekolah'] ?></td>
                       <td>
-                        <a href="view_ijazah.php?file=<?= urlencode($data['ijazah']) ?>" target="_blank"><?= $data['ijazah'] ?>Lihat Ijazah</a>
+                        <a href="view_ijazah.php?file=<?= urlencode($data['ijazah']) ?>" target="_blank"><?= $data['ijazah'] ?></a>
                       </td>
                       <td>
-                        <a href="view_rapor.php?file=<?= urlencode($data['rapor']) ?>" target="_blank"><?= $data['rapor'] ?>Lihat Rapor</a>
+                        <a href="view_rapor.php?file=<?= urlencode($data['rapor']) ?>" target="_blank"><?= $data['rapor'] ?></a>
                       </td>
                       <td>
-                        <a href="view_prestasi.php?file=<?= urlencode($data['prestasi']) ?>" target="_blank"><?= $data['prestasi'] ?>Lihat Prestasi</a>
+                        <a href="view_prestasi.php?file=<?= urlencode($data['prestasi']) ?>" target="_blank"><?= $data['prestasi'] ?></a>
                       </td>
                       <td><?= $data['nama_ortu'] ?></td>
                       <td><?= $data['pekerjaan'] ?></td>
                       <td><?= $data['telp_ortu'] ?></td>
                       <td><?= $data['pendidikan'] ?></td>
+                      <td>
+                        <div class="btn-group btn-group-sm">
+                          <a href="edit-form-reguler.php?id=<?php echo $data['user_id'] ?>" class="btn btn-warning"><i class="fas fa-pen"></i></a>
+                        </div>
+                      </td>
                     </tr>
-                    <?php
-                    $no++;
-                    endwhile;
-                    ?>
+                    <?php endwhile; ?>
                   </tbody>
                 </table>
               </div>
@@ -209,6 +208,18 @@ $result = mysqli_query($link, $sql);
 <script src="dist/js/demo.js"></script>
 <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
 <script src="dist/js/pages/dashboard2.js"></script>
-
+<script>
+  $(function () {
+    $('#example1').DataTable({
+      "paging": false,
+      "lengthChange": false,
+      "searching": false,
+      "ordering": false,
+      "info": false,
+      "autoWidth": false,
+      "responsive": true,
+    });
+  });
+</script>
 </body>
 </html>

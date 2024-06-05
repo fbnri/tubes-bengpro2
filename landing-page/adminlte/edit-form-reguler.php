@@ -1,26 +1,26 @@
 <?php
+
 include("koneksi.php");
 session_start();
 
-// Jika pengguna belum login, arahkan ke halaman login
 if (!isset($_SESSION['user_id'])) {
   header("Location: login.php");
   exit();
 }
 
 $user_id = $_SESSION['user_id'];
-// Periksa apakah pengguna sudah mengisi formulir
 $sql = "SELECT * FROM pendaftar_reguler WHERE user_id='$user_id' LIMIT 1";
 $result = mysqli_query($link, $sql);
 
 if (mysqli_num_rows($result) == 1) {
-  // Jika sudah mengisi formulir, arahkan ke halaman index
-  header("Location: index.php");
+  $data = mysqli_fetch_assoc($result);
+} else {
+  // Jika tidak ada data, arahkan ke halaman lain atau tampilkan pesan kesalahan
+  echo "Data tidak ditemukan";
   exit();
 }
 
-// Logika pengisian formulir di sini
-if (isset($_POST['submit'])) {
+if(isset($_POST['edit'])) {
   $nama_siswa = $_POST['nama_siswa'];
   $ttl = $_POST['ttl'];
   $jk = $_POST['jk'];
@@ -28,20 +28,26 @@ if (isset($_POST['submit'])) {
   $telp_siswa = $_POST['telp_siswa'];
   $agama = $_POST['agama'];
   $asal_sekolah = $_POST['asal_sekolah'];
-  $ijazah = $_FILES['ijazah']['name'];
-  $rapor = $_FILES['rapor']['name'];
-  $prestasi = $_FILES['prestasi']['name'];
+  $ijazah = !empty($_FILES['ijazah']['name']) ? $_FILES['ijazah']['name'] : $data['ijazah'];
+  $rapor = !empty($_FILES['rapor']['name']) ? $_FILES['rapor']['name'] : $data['rapor'];
+  $prestasi = !empty($_FILES['prestasi']['name']) ? $_FILES['prestasi']['name'] : $data['prestasi'];
   $nama_ortu = $_POST['nama_ortu'];
   $pekerjaan = $_POST['pekerjaan'];
   $telp_ortu = $_POST['telp_ortu'];
   $pendidikan = $_POST['pendidikan'];
 
   // Simpan file yang diunggah
-  move_uploaded_file($_FILES['ijazah']['tmp_name'], "../ijazah/" . $ijazah);
-  move_uploaded_file($_FILES['rapor']['tmp_name'], "../rapor/" . $rapor);
-  move_uploaded_file($_FILES['prestasi']['tmp_name'], "../prestasi/" . $prestasi);
+  if (!empty($_FILES['ijazah']['tmp_name'])) {
+    move_uploaded_file($_FILES['ijazah']['tmp_name'], "../ijazah/" . $ijazah);
+  }
+  if (!empty($_FILES['rapor']['tmp_name'])) {
+    move_uploaded_file($_FILES['rapor']['tmp_name'], "../rapor/" . $rapor);
+  }
+  if (!empty($_FILES['prestasi']['tmp_name'])) {
+    move_uploaded_file($_FILES['prestasi']['tmp_name'], "../prestasi/" . $prestasi);
+  }
 
-  $sql = "INSERT INTO pendaftar_reguler (user_id, nama_siswa, ttl, jk, alamat, telp_siswa, agama, asal_sekolah, ijazah, rapor, prestasi, nama_ortu, pekerjaan, telp_ortu, pendidikan) VALUES ('$user_id', '$nama_siswa', '$ttl', '$jk', '$alamat', '$telp_siswa', '$agama', '$asal_sekolah', '$ijazah', '$rapor', '$prestasi', '$nama_ortu', '$pekerjaan', '$telp_ortu', '$pendidikan')";
+  $sql = "UPDATE pendaftar_reguler SET nama_siswa='$nama_siswa', ttl='$ttl', jk='$jk', alamat='$alamat', telp_siswa='$telp_siswa', agama='$agama', asal_sekolah='$asal_sekolah', ijazah='$ijazah', rapor='$rapor', prestasi='$prestasi', nama_ortu='$nama_ortu', pekerjaan='$pekerjaan', telp_ortu='$telp_ortu', pendidikan='$pendidikan' WHERE user_id='$user_id'";
 
   if (mysqli_query($link, $sql)) {
     $_SESSION['success'] = "Pendaftaran berhasil!";
@@ -52,8 +58,6 @@ if (isset($_POST['submit'])) {
   }
 }
 ?>
-
-
 
 
 <!DOCTYPE html>
@@ -111,6 +115,14 @@ if (isset($_POST['submit'])) {
     <ul class="navbar-nav">
       <li class="nav-item">
         <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+      </li>
+      <li class="nav-item">
+        <a href="index.php">
+          <button type="button" class="btn btn-warning btn-block">
+          <i class="fas fa-chevron-left"></i>
+            <span class="m-1"> Kembali</span> 
+          </button>
+        </a>
       </li>
     </ul>
 
@@ -171,12 +183,12 @@ if (isset($_POST['submit'])) {
                       <div class="card-body">
                         <div class="form-group">
                           <label for="exampleInputEmail1">Nama Lengkap</label>
-                          <input type="text" name="nama_siswa" class="form-control" id="exampleInputEmail1" required>
+                          <input type="text" name="nama_siswa" value="<?= $data['nama_siswa'] ?>" class="form-control" id="exampleInputEmail1">
                         </div>
                         <div class="form-group">
                           <label>Tempat, Tanggal Lahir</label>
                           <div class="input-group date" id="reservationdate" data-target-input="nearest">
-                            <input type="text" name="ttl" class="form-control datetimepicker-input" data-target="#reservationdate"/>
+                            <input type="text" name="ttl" value="<?php echo $data['ttl'] ?>" class="form-control datetimepicker-input" data-target="#reservationdate"/>
                             <div class="input-group-append" data-target="#reservationdate" data-toggle="datetimepicker">
                                 <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                             </div>
@@ -187,43 +199,43 @@ if (isset($_POST['submit'])) {
                           <div class="input-group">
                             <select class="form-control select1" name="jk">
                               <option disabled="disabled" selected="selected">Pilih</option>
-                              <option value="laki-laki">Laki-Laki</option>
-                              <option value="perempuan">Perempuan</option>
+                              <option value="laki-laki" <?php if($data['jk'] == "laki-laki") echo "selected"; ?>>Laki-Laki</option>
+                              <option value="perempuan" <?php if($data['jk'] == "perempuan") echo "selected"; ?>>Perempuan</option>
                             </select>
                           </div>
                         </div>
                         <div class="form-group">
                           <label for="exampleInputPassword1">Alamat Lengkap</label>
-                          <textarea class="form-control" name="alamat" id=""></textarea>
+                          <textarea class="form-control" name="alamat" id=""><?php echo $data['alamat'] ?></textarea>
                         </div>
                         <div class="form-group">
                           <label for="exampleInputPassword1">No. Telp/HP</label>
-                          <input type="number" id="telp_siswa" maxlength="12" name="telp_siswa" class="form-control" id="exampleInputPassword1">
+                          <input type="number" id="telp_siswa" maxlength="12" value="<?php echo $data['telp_siswa'] ?>" name="telp_siswa" class="form-control" id="exampleInputPassword1">
                         </div>
                         <div class="form-group">
                           <label>Agama</label>
                           <div class="input-group">
                             <select class="form-control select1" name="agama">
                               <option disabled="disabled" selected="selected">Pilih</option>
-                              <option value="islam">Islam</option>
-                              <option value="protestan">Protestan</option>
-                              <option value="katolik">Katolik</option>
-                              <option value="hindu">Hindu</option>
-                              <option value="buddha">Buddha</option>
-                              <option value="konghucu">Konghucu</option>
+                              <option value="islam" <?php if($data['agama'] == "islam") echo "selected"; ?>>Islam</option>
+                              <option value="protestan" <?php if($data['agama'] == "protestan") echo "selected"; ?>>Protestan</option>
+                              <option value="katolik" <?php if($data['agama'] == "katolik") echo "selected"; ?>>Katolik</option>
+                              <option value="hindu" <?php if($data['agama'] == "hindu") echo "selected"; ?>>Hindu</option>
+                              <option value="buddha" <?php if($data['agama'] == "buddha") echo "selected"; ?>>Buddha</option>
+                              <option value="konghucu" <?php if($data['agama'] == "konghucu") echo "selected"; ?>>Konghucu</option>
                             </select>
                           </div>
                         </div>
                         <div class="form-group">
                           <label for="exampleInputPassword1">Asal Sekolah</label>
-                          <input type="text" name="asal_sekolah" class="form-control" id="exampleInputPassword1">
+                          <input type="text" name="asal_sekolah" value="<?php echo $data['asal_sekolah'] ?>" class="form-control" id="exampleInputPassword1">
                         </div>
                         <div class="form-group">
                           <label for="ijazahInputFile">Ijazah</label>
                           <div class="input-group">
                             <div class="custom-file">
                               <input type="file" name="ijazah" class="custom-file-input" id="ijazahInputFile" accept=".pdf">
-                              <label class="custom-file-label" for="ijazahInputFile">Pilih file</label>
+                              <label class="custom-file-label" for="ijazahInputFile"><?php echo $data['ijazah'] ?></label>
                             </div>
                           </div>
                         </div>
@@ -232,7 +244,7 @@ if (isset($_POST['submit'])) {
                           <div class="input-group">
                             <div class="custom-file">
                               <input type="file" name="rapor" class="custom-file-input" id="raporInputFile" accept=".pdf">
-                              <label class="custom-file-label" for="raporInputFile">Pilih file</label>
+                              <label class="custom-file-label" for="raporInputFile"><?php echo $data['rapor'] ?></label>
                             </div>
                           </div>
                         </div>
@@ -241,7 +253,7 @@ if (isset($_POST['submit'])) {
                           <div class="input-group">
                             <div class="custom-file">
                               <input type="file" name="prestasi" class="custom-file-input" id="prestasiInputFile" accept=".pdf">
-                              <label class="custom-file-label" for="prestasiInputFile">Pilih file</label>
+                              <label class="custom-file-label" for="prestasiInputFile"><?php echo $data['prestasi'] ?></label>
                             </div>
                           </div>
                         </div>
@@ -267,28 +279,28 @@ if (isset($_POST['submit'])) {
                       <div class="card-body">
                         <div class="form-group">
                           <label for="exampleInputEmail1">Nama Lengkap Orang Tua/Wali</label>
-                          <input type="text" name="nama_ortu" class="form-control" id="exampleInputEmail1">
+                          <input type="text" name="nama_ortu" value="<?php echo $data['nama_ortu'] ?>" class="form-control" id="exampleInputEmail1">
                         </div>
                         <div class="form-group">
                           <label for="exampleInputEmail1">Pekerjaan Orang Tua</label>
-                          <input type="text" name="pekerjaan" class="form-control" id="exampleInputEmail1">
+                          <input type="text" name="pekerjaan" value="<?php echo $data['pekerjaan'] ?>" class="form-control" id="exampleInputEmail1">
                         </div>
                         <div class="form-group">
                           <label for="exampleInputPassword1">No. Telp/HP Orang Tua/Wali</label>
-                          <input type="number" id="telp_ortu" maxlength="12" name="telp_ortu" class="form-control" id="exampleInputPassword1">
+                          <input type="number" id="telp_ortu" value="<?php echo $data['telp_ortu'] ?>" maxlength="12" name="telp_ortu" class="form-control" id="exampleInputPassword1">
                         </div>
                         <div class="form-group">
                           <label>Pendidikan Terakhir Orang Tua/Wali</label>
                           <div class="input-group">
                             <select class="form-control select1" name="pendidikan">
                               <option disabled="disabled" selected="selected">Pilih</option>
-                              <option value="SD">SD</option>
-                              <option value="SMP">SMP</option>
-                              <option value="SMA/SMK">SMA/SMK</option>
-                              <option value="D3">D3</option>
-                              <option value="S1/D4">S1/D4</option>
-                              <option value="S2">S2</option>
-                              <option value="S3">S3</option>
+                              <option value="SD" <?php if($data['pendidikan'] == "SD") echo "selected"; ?>>SD</option>
+                              <option value="SMP" <?php if($data['pendidikan'] == "SMP") echo "selected"; ?>>SMP</option>
+                              <option value="SMA/SMK" <?php if($data['pendidikan'] == "SMA/SMK") echo "selected"; ?>>SMA/SMK</option>
+                              <option value="D3" <?php if($data['pendidikan'] == "D3") echo "selected"; ?>>D3</option>
+                              <option value="S1/D4" <?php if($data['pendidikan'] == "S1/D4") echo "selected"; ?>>S1/D4</option>
+                              <option value="S2" <?php if($data['pendidikan'] == "S2") echo "selected"; ?>>S2</option>
+                              <option value="S3" <?php if($data['pendidikan'] == "S3") echo "selected"; ?>>S3</option>
                             </select>
                           </div>
                         </div>
@@ -298,7 +310,7 @@ if (isset($_POST['submit'])) {
                     <!-- /.card-body -->
                   </div>
                   <div class="card-footer mb-4">
-                    <button type="submit" name="submit" class="btn btn-success form-control">
+                    <button type="submit" name="edit" class="btn btn-success form-control">
                       <i class="fa fa-check"></i>
                     </button>
                   </div>
@@ -324,7 +336,7 @@ if (isset($_POST['submit'])) {
         <strong>Copyright &copy; 2024 SkuyBro.</strong>
         All rights reserved.
         <div class="float-right d-none d-sm-inline-block">
-          <a href="logout.php">
+          <a href="login.html">
             <button type="submit" class="btn btn-outline-danger btn-block">Log Out 
               <i class="fa fa-sign-out-alt"></i>
             </button>
