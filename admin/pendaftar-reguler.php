@@ -124,13 +124,7 @@ $result = mysqli_query($link, $sql);
               <li class="nav-item">
                 <a href="#" class="nav-link active">
                   <i class="far fa-circle nav-icon"></i>
-                  <p>Pendaftar Reguler</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="pendaftar-prestasi.php" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Pendaftar Prestasi</p>
+                  <p>Pendaftar</p>
                 </a>
               </li>
             </ul>
@@ -218,6 +212,7 @@ $result = mysqli_query($link, $sql);
                     <th>Asal Sekolah</th>
                     <th>Ijazah</th>
                     <th>Rapor</th>
+                    <th>Prestasi</th>
                     <th>Nama Ortu</th>
                     <th>Pekerjaan</th>
                     <th>No. Telp/HP Ortu</th>
@@ -243,7 +238,10 @@ $result = mysqli_query($link, $sql);
                         <a href="view_ijazah.php?file=<?= urlencode($data['ijazah']) ?>" target="_blank">Lihat Ijazah</a>
                       </td>
                       <td>
-                        <a href="view_pdf.php?file=<?= urlencode($data['rapor']) ?>" target="_blank">Lihat Rapor</a>
+                        <a href="view_rapor.php?file=<?= urlencode($data['rapor']) ?>" target="_blank">Lihat Rapor</a>
+                      </td>
+                      <td>
+                        <a href="view_prestasi.php?file=<?= urlencode($data['prestasi']) ?>" target="_blank">Lihat prestasi</a>
                       </td>
                       <td><?= $data['nama_ortu'] ?></td>
                       <td><?= $data['pekerjaan'] ?></td>

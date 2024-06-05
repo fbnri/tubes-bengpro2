@@ -18,6 +18,7 @@ if(isset($_POST['submit'])) {
   $asal_sekolah = $_POST['asal_sekolah'];
   $ijazah = $_FILES['ijazah']['name'];
   $rapor = $_FILES['rapor']['name'];
+  $prestasi = $_FILES['prestasi']['name'];
   $nama_ortu = $_POST['nama_ortu'];
   $pekerjaan = $_POST['pekerjaan'];
   $telp_ortu = $_POST['telp_ortu'];
@@ -26,8 +27,9 @@ if(isset($_POST['submit'])) {
   // Simpan file yang diunggah
   move_uploaded_file($_FILES['ijazah']['tmp_name'], "../ijazah/" . $ijazah);
   move_uploaded_file($_FILES['rapor']['tmp_name'], "../rapor/" . $rapor);
+  move_uploaded_file($_FILES['prestasi']['tmp_name'], "../prestasi/" . $prestasi);
 
-  $sql = "INSERT INTO pendaftar_reguler (nama_siswa, ttl, jk, alamat, telp_siswa, agama, asal_sekolah, ijazah, rapor, nama_ortu, pekerjaan, telp_ortu, pendidikan) VALUES ('$nama_siswa', '$ttl', '$jk', '$alamat', '$telp_siswa', '$agama', '$asal_sekolah', '$ijazah', '$rapor', '$nama_ortu', '$pekerjaan', '$telp_ortu', '$pendidikan')";
+  $sql = "INSERT INTO pendaftar_reguler (nama_siswa, ttl, jk, alamat, telp_siswa, agama, asal_sekolah, ijazah, rapor, prestasi, nama_ortu, pekerjaan, telp_ortu, pendidikan) VALUES ('$nama_siswa', '$ttl', '$jk', '$alamat', '$telp_siswa', '$agama', '$asal_sekolah', '$ijazah', '$rapor', '$prestasi', '$nama_ortu', '$pekerjaan', '$telp_ortu', '$pendidikan')";
 
   if (mysqli_query($link, $sql)) {
     $_SESSION['success'] = "Pendaftaran berhasil!";

@@ -120,10 +120,13 @@ $result = mysqli_query($link, $sql);
                       <td><?= $data['agama'] ?></td>
                       <td><?= $data['asal_sekolah'] ?></td>
                       <td>
-                        <a href="view_ijazah.php?file=<?= urlencode($data['ijazah']) ?>" target="_blank"><?= $data['ijazah'] ?></a>
+                        <a href="view_ijazah.php?file=<?= urlencode($data['ijazah']) ?>" target="_blank"><?= $data['ijazah'] ?>Lihat Ijazah</a>
                       </td>
                       <td>
-                        <a href="view_rapor.php?file=<?= urlencode($data['rapor']) ?>" target="_blank"><?= $data['rapor'] ?></a>
+                        <a href="view_rapor.php?file=<?= urlencode($data['rapor']) ?>" target="_blank"><?= $data['rapor'] ?>Lihat Rapor</a>
+                      </td>
+                      <td>
+                        <a href="view_prestasi.php?file=<?= urlencode($data['prestasi']) ?>" target="_blank"><?= $data['prestasi'] ?>Lihat Prestasi</a>
                       </td>
                       <td><?= $data['nama_ortu'] ?></td>
                       <td><?= $data['pekerjaan'] ?></td>
