@@ -3,7 +3,13 @@
 include("koneksi.php");
 session_start();
 
-$sql = "SELECT * FROM pendaftar_reguler";
+if (!isset($_SESSION['user_id'])) {
+  header("location: login.php");
+  exit();
+}
+
+$user_id = $_SESSION['user_id'];
+$sql = "SELECT * FROM pendaftar_reguler WHERE user_id = '$user_id'";
 $result = mysqli_query($link, $sql);
 
 ?>
@@ -25,6 +31,8 @@ $result = mysqli_query($link, $sql);
   <link rel="stylesheet" href="plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
   <!-- Theme style -->
   <link rel="stylesheet" href="dist/css/adminlte.min.css">
+  <!-- SweetAlert2 -->
+  <link rel="stylesheet" href="plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css">
 </head>
 <body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed">
 <div class="wrapper">
@@ -58,12 +66,6 @@ $result = mysqli_query($link, $sql);
           </div><!-- /.col -->
         </div><!-- /.row -->
       </div><!-- /.container-fluid -->
-      <!-- <a href="tambah-angkatan.php">
-        <button type="button" class="btn btn-info btn-group-sm">
-          <i class="fa fa-plus"></i>
-          <span class="m-sm-3">Tambah</span>
-        </button>
-      </a> -->
     </div>
     <!-- /.content-header -->
 
@@ -75,7 +77,12 @@ $result = mysqli_query($link, $sql);
           <div class="col-12">
             <div class="card">
               <div class="card-header">
-                <h3 class="card-title">Data Pendaftaran</h3>
+                <a href="form-reguler.php">
+                  <button type="button" class="btn btn-info btn-group-sm">
+                    <i class="fa fa-plus"></i>
+                    <span class="m-sm-3">Tambah</span>
+                  </button>
+                </a>
               </div>
               <!-- /.card-header -->
               <div class="card-body">
@@ -113,13 +120,11 @@ $result = mysqli_query($link, $sql);
                       <td><?= $data['agama'] ?></td>
                       <td><?= $data['asal_sekolah'] ?></td>
                       <td>
-                        <?php
-                        // Tautan unduh PDF
-                        $pdfLink = "view_pdf.php?id=" . $data['id']; // Ganti 'id' dengan nama kolom yang menyimpan id pendaftar
-                        ?>
-                        <a href="<?= $pdfLink ?>" target="_blank">lihat PDF</a>
+                        <a href="view_ijazah.php?file=<?= urlencode($data['ijazah']) ?>" target="_blank"><?= $data['ijazah'] ?></a>
                       </td>
-                      <td><?= $data['rapor'] ?></td>
+                      <td>
+                        <a href="view_rapor.php?file=<?= urlencode($data['rapor']) ?>" target="_blank"><?= $data['rapor'] ?></a>
+                      </td>
                       <td><?= $data['nama_ortu'] ?></td>
                       <td><?= $data['pekerjaan'] ?></td>
                       <td><?= $data['telp_ortu'] ?></td>
@@ -133,14 +138,16 @@ $result = mysqli_query($link, $sql);
                 </table>
               </div>
               <!-- /.card-body -->
+              </div>
             </div>
-            <!-- /.card -->
+            <!-- /.col -->
           </div>
+          <!-- /.row -->
         </div>
-      </div><!--/. container-fluid -->
-    </section>
+        <!--/. container-fluid -->
+      </section>
     <!-- /.content -->
-  </div>
+    </div>
   <!-- /.content-wrapper -->
 
   <!-- Control Sidebar -->
@@ -151,10 +158,13 @@ $result = mysqli_query($link, $sql);
 
   <!-- Main Footer -->
   <footer class="main-footer">
-    <strong>Copyright &copy; 2014-2021 <a href="https://adminlte.io">AdminLTE.io</a>.</strong>
-    All rights reserved.
     <div class="float-right d-none d-sm-inline-block">
-      <b>Version</b> 3.2.0
+      <a href="logout.php">
+        <button type="button" class="btn btn-danger btn-block">
+          <i class="fa fa-sign-out-alt"></i>
+          <span class="m-1">Log Out</span> 
+        </button>
+      </a>
     </div>
   </footer>
 </div>
@@ -165,6 +175,19 @@ $result = mysqli_query($link, $sql);
 <script src="plugins/jquery/jquery.min.js"></script>
 <!-- Bootstrap -->
 <script src="plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- overlayScrollbars -->
+<script src="plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
+<!-- AdminLTE App -->
+<script src="dist/js/adminlte.js"></script>
+
+<!-- PAGE PLUGINS -->
+<!-- jQuery Mapael -->
+<script src="plugins/jquery-mousewheel/jquery.mousewheel.js"></script>
+<script src="plugins/raphael/raphael.min.js"></script>
+<script src="plugins/jquery-mapael/jquery.mapael.min.js"></script>
+<script src="plugins/jquery-mapael/maps/usa_states.min.js"></script>
+<!-- ChartJS -->
+<script src="plugins/chart.js/Chart.min.js"></script>
 <!-- DataTables  & Plugins -->
 <script src="plugins/datatables/jquery.dataTables.min.js"></script>
 <script src="plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
@@ -178,25 +201,11 @@ $result = mysqli_query($link, $sql);
 <script src="plugins/datatables-buttons/js/buttons.html5.min.js"></script>
 <script src="plugins/datatables-buttons/js/buttons.print.min.js"></script>
 <script src="plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
-<!-- AdminLTE App -->
-<script src="dist/js/adminlte.js"></script>
+
 <!-- AdminLTE for demo purposes -->
 <script src="dist/js/demo.js"></script>
-<!-- AdminLTE for demo purposes -->
-<script src="dist/js/demo.js"></script>
-<!-- Page specific script -->
-<script>
-  $(function () {
-    $('#example1').DataTable({
-      "paging": true,
-      "lengthChange": false,
-      "searching": false,
-      "ordering": false,
-      "info": true,
-      "autoWidth": false,
-      "responsive": true,
-    });
-  });
-</script>
+<!-- AdminLTE dashboard demo (This is only for demo purposes) -->
+<script src="dist/js/pages/dashboard2.js"></script>
+
 </body>
 </html>

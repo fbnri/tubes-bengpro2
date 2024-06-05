@@ -1,7 +1,10 @@
 <?php
 
 include("koneksi.php");
-$sql = "SELECT * FROM"
+session_start();
+
+$sql = "SELECT * FROM pendaftar_reguler";
+$result = mysqli_query($link, $sql);
 
 ?>
 
@@ -206,61 +209,56 @@ $sql = "SELECT * FROM"
                   <thead>
                   <tr>
                     <th>No</th>
-                    <th>NIK</th>
                     <th>Nama Siswa</th>
                     <th>TTL</th>
                     <th>Jenis Kelamin</th>
-                    <th>Alamat</th>
-                    <th>No. Telp/HP</th>
+                    <th>Alamat Lengkap</th>
+                    <th>No. Telp/HP Siswa</th>
+                    <th>Agama</th>
                     <th>Asal Sekolah</th>
                     <th>Ijazah</th>
                     <th>Rapor</th>
+                    <th>Nama Ortu</th>
+                    <th>Pekerjaan</th>
+                    <th>No. Telp/HP Ortu</th>
+                    <th>Pendidikan</th>
+                    <th>Aksi</th>
                   </tr>
                   </thead>
                   <tbody>
                     <?php
-                    // $no = 1;
-                    // while($data = mysqli_fetch_array($result)) :
+                    $no = 1;
+                    while($data = mysqli_fetch_array($result)) :
                     ?>
                     <tr>
-                      <td>$no</td>
-                      <td>Win 95+</td>
-                      <td> 4</td>
-                      <td>X</td>
-                      <td>X</td>
-                      <td>X</td>
-                      <td>X</td>
-                      <td>X</td>
-                      <td>X</td>
-                      <td>X</td>
-                    </tr>
-                    <tr>
-                      <td>Other browsers</td>
-                      <td>All others</td>
-                      <td>-</td>
-                      <td>-</td>
-                      <td>U</td>
-                      <td>U</td>
-                      <td>U</td>
-                      <td>U</td>
-                      <td>U</td>
-                      <td>U</td>
-                    </tr>
-                    <tr>
-                      <td>Other browsers</td>
-                      <td>All others</td>
-                      <td>-</td>
-                      <td>-</td>
-                      <td>U</td>
-                      <td>U</td>
-                      <td>U</td>
-                      <td>U</td>
-                      <td>U</td>
-                      <td>U</td>
+                      <td><?= $no ?></td>
+                      <td><?= $data['nama_siswa'] ?></td>
+                      <td><?= $data['ttl'] ?></td>
+                      <td><?= $data['jk'] ?></td>
+                      <td><?= $data['alamat'] ?></td>
+                      <td><?= $data['telp_siswa'] ?></td>
+                      <td><?= $data['agama'] ?></td>
+                      <td><?= $data['asal_sekolah'] ?></td>
+                      <td>
+                        <a href="view_ijazah.php?file=<?= urlencode($data['ijazah']) ?>" target="_blank">Lihat Ijazah</a>
+                      </td>
+                      <td>
+                        <a href="view_pdf.php?file=<?= urlencode($data['rapor']) ?>" target="_blank">Lihat Rapor</a>
+                      </td>
+                      <td><?= $data['nama_ortu'] ?></td>
+                      <td><?= $data['pekerjaan'] ?></td>
+                      <td><?= $data['telp_ortu'] ?></td>
+                      <td><?= $data['pendidikan'] ?></td>
+                      <td>
+                        <div class="btn-group btn-group-sm">
+                          <a href="edit-user.php?id=<?php echo $data['id'] ?>" class="btn btn-warning"><i class="fas fa-pen"></i></a>
+                          <button class="btn btn-danger" onclick="confirmDelete(<?php echo $data['id']; ?>)"><i class="fas fa-trash"></i></button>
+                        </div>
+                      </td>
                     </tr>
                     <?php
-                    // $no++;
-                    // endwhile;
+                    $no++;
+                    endwhile;
                     ?>
                   </tbody>
                 </table>
