@@ -19,7 +19,6 @@ if (mysqli_num_rows($result) == 0) {
   exit();
 }
 
-// Konten halaman utama
 ?>
 
 <!DOCTYPE html>
