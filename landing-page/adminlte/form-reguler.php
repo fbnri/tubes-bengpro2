@@ -28,13 +28,16 @@ if (isset($_POST['submit'])) {
   $telp_siswa = $_POST['telp_siswa'];
   $agama = $_POST['agama'];
   $asal_sekolah = $_POST['asal_sekolah'];
-  $ijazah = $_FILES['ijazah']['name'];
-  $rapor = $_FILES['rapor']['name'];
-  $prestasi = $_FILES['prestasi']['name'];
   $nama_ortu = $_POST['nama_ortu'];
   $pekerjaan = $_POST['pekerjaan'];
   $telp_ortu = $_POST['telp_ortu'];
   $pendidikan = $_POST['pendidikan'];
+
+  // Menghasilkan nama file yang unik
+  $timestamp = time();
+  $ijazah = $timestamp . "_" . $_FILES['ijazah']['name'];
+  $rapor = $timestamp . "_" . $_FILES['rapor']['name'];
+  $prestasi = $timestamp . "_" . $_FILES['prestasi']['name'];
 
   // Simpan file yang diunggah
   move_uploaded_file($_FILES['ijazah']['tmp_name'], "../ijazah/" . $ijazah);
@@ -52,6 +55,7 @@ if (isset($_POST['submit'])) {
   }
 }
 ?>
+
 
 
 

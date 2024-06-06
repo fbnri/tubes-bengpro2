@@ -1,10 +1,23 @@
 <?php
-
 include("koneksi.php");
 session_start();
 
+// Jika pengguna belum login, arahkan ke halaman login
+if (!isset($_SESSION['user_id'])) {
+  header("Location: login.php");
+  exit();
+}
+
+$user_id = $_SESSION['user_id'];
+// Periksa apakah pengguna sudah mengisi formulir
 $sql = "SELECT * FROM pendaftar_reguler";
 $result = mysqli_query($link, $sql);
+
+if (mysqli_num_rows($result) == 0) {
+  // Jika belum mengisi formulir, arahkan ke halaman form-reguler
+  header("Location: form-reguler.php");
+  exit();
+}
 
 ?>
 
@@ -23,6 +36,8 @@ $result = mysqli_query($link, $sql);
   <link rel="stylesheet" href="plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
   <link rel="stylesheet" href="plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
   <link rel="stylesheet" href="plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
+  <!-- SweetAlert2 -->
+  <link rel="stylesheet" href="plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css">
   <!-- Theme style -->
   <link rel="stylesheet" href="dist/css/adminlte.min.css">
 </head>
@@ -50,9 +65,6 @@ $result = mysqli_query($link, $sql);
     <div class="sidebar">
       <!-- Sidebar user panel (optional) -->
       <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-        <div class="image">
-          <img src="dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
-        </div>
         <div class="info">
           <a href="#" class="d-block"><?php echo $_SESSION["nama_lengkap"]; ?></a>
         </div>
@@ -185,13 +197,13 @@ $result = mysqli_query($link, $sql);
                       <td><?= $data['agama'] ?></td>
                       <td><?= $data['asal_sekolah'] ?></td>
                       <td>
-                        <a href="view_ijazah.php?file=<?= urlencode($data['ijazah']) ?>" target="_blank">Lihat Ijazah</a>
+                      <a href="view_ijazah.php?file=<?= urlencode($data['ijazah']) ?>" target="_blank"><?= $data['ijazah'] ?></a>
                       </td>
                       <td>
-                        <a href="view_rapor.php?file=<?= urlencode($data['rapor']) ?>" target="_blank">Lihat Rapor</a>
+                      <a href="view_rapor.php?file=<?= urlencode($data['rapor']) ?>" target="_blank"><?= $data['rapor'] ?></a>
                       </td>
                       <td>
-                        <a href="view_prestasi.php?file=<?= urlencode($data['prestasi']) ?>" target="_blank">Lihat prestasi</a>
+                      <a href="view_prestasi.php?file=<?= urlencode($data['prestasi']) ?>" target="_blank"><?= $data['prestasi'] ?></a>
                       </td>
                       <td><?= $data['nama_ortu'] ?></td>
                       <td><?= $data['pekerjaan'] ?></td>
@@ -199,8 +211,8 @@ $result = mysqli_query($link, $sql);
                       <td><?= $data['pendidikan'] ?></td>
                       <td>
                         <div class="btn-group btn-group-sm">
-                          <a href="edit-user.php?id=<?php echo $data['id'] ?>" class="btn btn-warning"><i class="fas fa-pen"></i></a>
-                          <button class="btn btn-danger" onclick="confirmDelete(<?php echo $data['id']; ?>)"><i class="fas fa-trash"></i></button>
+                        <a href="edit-form-reguler.php?id=<?php echo $data['id'] ?>" class="btn btn-warning"><i class="fas fa-pen"></i></a>
+                          <button class="btn btn-danger" onclick="confirmDelete(<?php echo $data['user_id']; ?>)"><i class="fas fa-trash"></i></button>
                         </div>
                       </td>
                     </tr>
@@ -257,6 +269,26 @@ $result = mysqli_query($link, $sql);
 <script src="dist/js/demo.js"></script>
 <!-- AdminLTE for demo purposes -->
 <script src="dist/js/demo.js"></script>
+<!-- SweetAlert2 -->
+<script src="plugins/sweetalert2/sweetalert2.min.js"></script>
+<!-- SweetAlert2 untuk konfirmasi hapus -->
+<script>
+  function confirmDelete(userId) {
+    Swal.fire({
+      title: 'Apakah Anda yakin?',
+      text: "Anda tidak dapat mengembalikan ini!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Ya, hapus!',
+      cancelButtonText: 'Tidak, batal!',
+      reverseButtons: true
+    }).then((result) => {
+      if (result.isConfirmed) {
+        window.location.href = 'hapus-form-reguler.php?id=' + userId;
+      }
+    });
+  }
+</script>
 <!-- Page specific script -->
 <script>
   $(function () {
