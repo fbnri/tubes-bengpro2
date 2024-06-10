@@ -4,8 +4,8 @@ include("koneksi.php");
 session_start();
 $nama = $_SESSION['nama_lengkap'];
 
-$id = $_GET['id'];
-$sql = "SELECT * FROM user WHERE id='$id'";
+$admin_id = $_SESSION['admin_id'];
+$sql = "SELECT * FROM user WHERE admin_id='$admin_id'";
 $result = mysqli_query($link, $sql);
 $data = mysqli_fetch_array($result);
 
@@ -35,7 +35,7 @@ if(isset($_POST['edit'])){
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>AdminLTE 3 | Dashboard 2</title>
+  <?php include("title.php") ?>
 
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">

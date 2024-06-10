@@ -2,22 +2,10 @@
 include("koneksi.php");
 session_start();
 
-// Jika pengguna belum login, arahkan ke halaman login
-if (!isset($_SESSION['user_id'])) {
-  header("Location: login.php");
-  exit();
-}
-
-$user_id = $_SESSION['user_id'];
-// Periksa apakah pengguna sudah mengisi formulir
+$id = $_SESSION['id'];
 $sql = "SELECT * FROM pendaftar_reguler";
 $result = mysqli_query($link, $sql);
 
-if (mysqli_num_rows($result) == 0) {
-  // Jika belum mengisi formulir, arahkan ke halaman form-reguler
-  header("Location: form-reguler.php");
-  exit();
-}
 
 ?>
 
@@ -197,13 +185,13 @@ if (mysqli_num_rows($result) == 0) {
                       <td><?= $data['agama'] ?></td>
                       <td><?= $data['asal_sekolah'] ?></td>
                       <td>
-                      <a href="view_ijazah.php?file=<?= urlencode($data['ijazah']) ?>" target="_blank"><?= $data['ijazah'] ?></a>
+                        <a href="view_ijazah.php?file=<?= urlencode($data['ijazah']) ?>" target="_blank"><?= $data['ijazah'] ?></a>
                       </td>
                       <td>
-                      <a href="view_rapor.php?file=<?= urlencode($data['rapor']) ?>" target="_blank"><?= $data['rapor'] ?></a>
+                        <a href="view_rapor.php?file=<?= urlencode($data['rapor']) ?>" target="_blank"><?= $data['rapor'] ?></a>
                       </td>
                       <td>
-                      <a href="view_prestasi.php?file=<?= urlencode($data['prestasi']) ?>" target="_blank"><?= $data['prestasi'] ?></a>
+                        <a href="view_prestasi.php?file=<?= urlencode($data['prestasi']) ?>" target="_blank"><?= $data['prestasi'] ?></a>
                       </td>
                       <td><?= $data['nama_ortu'] ?></td>
                       <td><?= $data['pekerjaan'] ?></td>
@@ -211,8 +199,8 @@ if (mysqli_num_rows($result) == 0) {
                       <td><?= $data['pendidikan'] ?></td>
                       <td>
                         <div class="btn-group btn-group-sm">
-                        <a href="edit-form-reguler.php?id=<?php echo $data['id'] ?>" class="btn btn-warning"><i class="fas fa-pen"></i></a>
-                          <button class="btn btn-danger" onclick="confirmDelete(<?php echo $data['user_id']; ?>)"><i class="fas fa-trash"></i></button>
+                          <a href="edit-form-reguler.php?id=<?php echo $data['id'] ?>" class="btn btn-warning"><i class="fas fa-pen"></i></a>
+                          <button class="btn btn-danger" onclick="confirmDelete(<?php echo $data['id']; ?>)"><i class="fas fa-trash"></i></button>
                         </div>
                       </td>
                     </tr>
@@ -303,5 +291,17 @@ if (mysqli_num_rows($result) == 0) {
     });
   });
 </script>
+<?php
+if (isset($_SESSION['success'])) {
+    echo "<script>
+    Swal.fire({
+        icon: 'success',
+        title: 'Success',
+        text: '" . $_SESSION['success'] . "'
+    });
+    </script>";
+    unset($_SESSION['success']);
+}
+?>
 </body>
 </html>
