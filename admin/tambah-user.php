@@ -5,6 +5,12 @@ error_reporting(0);
 session_start();
 $nama = $_SESSION['nama_lengkap'];
 
+// jika admin belum login akan mengarah ke login
+if (!isset($_SESSION['username'])) {
+  header("Location: login-admin.php");
+  exit();
+}
+
 if(isset($_POST['tambah'])){
   $nama_lengkap = $_POST['nama_lengkap'];
   $username = $_POST['username'];

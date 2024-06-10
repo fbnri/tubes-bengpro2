@@ -2,6 +2,12 @@
 // error_reporting(0);
 session_start();
 
+// jika admin belum login akan mengarah ke login
+if (!isset($_SESSION['username'])) {
+  header("Location: login-admin.php");
+  exit();
+}
+
 include("koneksi.php");
 
 $sql = "SELECT COUNT(*) AS total_pendaftar FROM pendaftar_reguler";

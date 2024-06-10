@@ -4,6 +4,12 @@ include("koneksi.php");
 session_start();
 error_reporting(0);
 
+// jika admin belum login akan mengarah ke login
+if (!isset($_SESSION['username'])) {
+  header("Location: login-admin.php");
+  exit();
+}
+
 $sql = "SELECT * FROM user";
 $result = mysqli_query($link, $sql);
 
