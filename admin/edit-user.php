@@ -4,6 +4,12 @@ include("koneksi.php");
 session_start();
 $nama = $_SESSION['nama_lengkap'];
 
+// jika admin belum login akan mengarah ke login
+if (!isset($_SESSION['username'])) {
+  header("Location: login-admin.php");
+  exit();
+}
+
 $admin_id = $_SESSION['admin_id'];
 $sql = "SELECT * FROM user WHERE admin_id='$admin_id'";
 $result = mysqli_query($link, $sql);
