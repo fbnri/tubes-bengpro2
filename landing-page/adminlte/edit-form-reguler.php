@@ -8,11 +8,8 @@ if (!isset($_SESSION['user_id'])) {
   exit();
 }
 
-
-// $user_id = $_SESSION['user_id'];
-$id = $_GET['id'];
-// var_dump($id);
-$sql = "SELECT * FROM pendaftar_reguler WHERE id='$id' LIMIT 1";
+$user_id = $_SESSION['user_id'];
+$sql = "SELECT * FROM pendaftar_reguler WHERE user_id='$user_id' LIMIT 1";
 $result = mysqli_query($link, $sql);
 
 if (mysqli_num_rows($result) == 1) {
@@ -53,7 +50,7 @@ if(isset($_POST['edit'])) {
   $sql = "UPDATE pendaftar_reguler SET nama_siswa='$nama_siswa', ttl='$ttl', jk='$jk', alamat='$alamat', telp_siswa='$telp_siswa', agama='$agama', asal_sekolah='$asal_sekolah', ijazah='$ijazah', rapor='$rapor', prestasi='$prestasi', nama_ortu='$nama_ortu', pekerjaan='$pekerjaan', telp_ortu='$telp_ortu', pendidikan='$pendidikan' WHERE user_id='$user_id'";
 
   if (mysqli_query($link, $sql)) {
-    $_SESSION['success'] = "Pendaftaran berhasil!";
+    $_SESSION['success'] = "Data Berhasil diubah!";
     header("Location: index.php");
     exit();
   } else {
@@ -78,8 +75,6 @@ if(isset($_POST['edit'])) {
   <link rel="stylesheet" href="plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
   <!-- Theme style -->
   <link rel="stylesheet" href="dist/css/adminlte.min.css">
-  <!-- SweetAlert2 -->
-  <link rel="stylesheet" href="plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css">
   <!-- daterange picker -->
   <link rel="stylesheet" href="plugins/daterangepicker/daterangepicker.css">
   <!-- iCheck for checkboxes and radio inputs -->
@@ -189,7 +184,7 @@ if(isset($_POST['edit'])) {
                         <div class="form-group">
                           <label>Tempat, Tanggal Lahir</label>
                           <div class="input-group date" id="reservationdate" data-target-input="nearest">
-                            <input type="text" name="ttl" value="<?= $data['ttl'] ?>" class="form-control datetimepicker-input" data-target="#reservationdate"/>
+                            <input type="text" name="ttl" value="<?php echo $data['ttl'] ?>" class="form-control datetimepicker-input" data-target="#reservationdate"/>
                             <div class="input-group-append" data-target="#reservationdate" data-toggle="datetimepicker">
                                 <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                             </div>

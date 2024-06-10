@@ -1,7 +1,7 @@
 <?php
 session_start();
+session_unset();
 session_destroy();
-$_SESSION['success'] = "Berhasil Logout";
 header("Location: login.php");
-exit;
+exit();
 ?>

@@ -2,6 +2,7 @@
 
 include("koneksi.php");
 session_start();
+error_reporting(0);
 
 $sql = "SELECT * FROM user";
 $result = mysqli_query($link, $sql);
@@ -13,7 +14,7 @@ $result = mysqli_query($link, $sql);
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>AdminLTE 3 | Dashboard 2</title>
+  <?php include("title.php") ?>
 
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
@@ -109,10 +110,10 @@ $result = mysqli_query($link, $sql);
                       <td><?php echo $data['username'] ?></td>
                       <td><strong><?php echo $data['status'] ?></strong></td>
                       <td class="text-right py-0 align-middle">
-                        <div class="btn-group btn-group-sm">
-                          <a href="edit-user.php?id=<?php echo $data['id'] ?>" class="btn btn-warning"><i class="fas fa-pen"></i></a>
-                          <button class="btn btn-danger" onclick="confirmDelete(<?php echo $data['id']; ?>)"><i class="fas fa-trash"></i></button>
-                        </div>
+                      <div class="btn-group btn-group-sm">
+                        <a href="edit-user.php?id=<?php echo htmlspecialchars($data['id']); ?>" class="btn btn-warning"><i class="fas fa-pen"></i></a>
+                        <button class="btn btn-danger" onclick="confirmDelete(<?php echo htmlspecialchars($data['id']); ?>)"><i class="fas fa-trash"></i></button>
+                      </div>
                       </td>
                     </tr>
                     <?php 

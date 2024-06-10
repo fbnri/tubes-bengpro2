@@ -1,59 +1,40 @@
 <?php
 include("koneksi.php");
 session_start();
-
-// Jika pengguna sudah login, arahkan ke halaman yang sesuai
-if (isset($_SESSION['user_id'])) {
-  $user_id = $_SESSION['user_id'];
-  // Periksa apakah pengguna sudah mengisi formulir
-  $sql = "SELECT * FROM pendaftar_reguler WHERE user_id='$user_id' LIMIT 1";
-  $result = mysqli_query($link, $sql);
-  
-  if (mysqli_num_rows($result) == 1) {
-    // Jika sudah mengisi, arahkan ke halaman index
-    header("Location: index.php");
-  } else {
-    // Jika belum mengisi, arahkan ke halaman form-reguler
-    header("Location: form-reguler.php");
-  }
-  exit();
-}
+error_reporting(0);
 
 $alert = "Masukkan username dan password";
 if (isset($_POST['masuk'])) {
+  $username = mysqli_real_escape_string($link, $_POST['username']);
+  $password = $_POST['password'];
+
   // Ambil data pengguna dari database berdasarkan username yang dimasukkan
-  $sql = "SELECT * FROM user_pendaftar WHERE username='{$_POST['username']}' LIMIT 1";
+  $sql = "SELECT * FROM user_pendaftar WHERE username='$username' LIMIT 1";
   $result = mysqli_query($link, $sql);
-  
+
   if (mysqli_num_rows($result) == 1) {
     $data = mysqli_fetch_array($result);
-    // Periksa apakah password yang dimasukkan cocok dengan hash yang disimpan di database
-    if (password_verify($_POST['password'], $data['password'])) {
-      // Jika cocok, atur sesi pengguna
+    if (password_verify($password, $data['password'])) {
       $_SESSION['user_id'] = $data['id'];
       $_SESSION['nama_lengkap'] = $data['nama_lengkap'];
-      
-      // Periksa apakah pengguna sudah mengisi formulir
+
       $sql = "SELECT * FROM pendaftar_reguler WHERE user_id='{$data['id']}' LIMIT 1";
       $result = mysqli_query($link, $sql);
-      
+
       if (mysqli_num_rows($result) == 1) {
-        // Jika sudah mengisi, arahkan ke halaman index
         header("Location: index.php");
       } else {
-        // Jika belum mengisi, arahkan ke halaman form-reguler
         header("Location: form-reguler.php");
       }
       exit();
     } else {
-      // Jika password tidak cocok, tampilkan pesan kesalahan
       $alert = "Password Salah";
     }
   } else {
-    // Jika username tidak ditemukan, tampilkan pesan kesalahan
     $alert = "Username Salah";
   }
 }
+
 ?>
 
 <!DOCTYPE html>

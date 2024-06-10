@@ -220,5 +220,17 @@ if (mysqli_num_rows($result) == 0) {
     });
   });
 </script>
+<?php
+if (isset($_SESSION['success'])) {
+    echo "<script>
+    Swal.fire({
+        icon: 'success',
+        title: 'Success',
+        text: '" . $_SESSION['success'] . "'
+    });
+    </script>";
+    unset($_SESSION['success']);
+}
+?>
 </body>
 </html>

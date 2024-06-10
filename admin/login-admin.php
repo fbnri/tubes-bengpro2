@@ -4,23 +4,46 @@ include("koneksi.php");
 session_start();
 error_reporting(0);
 
+// Redirect jika sudah login
 if (isset($_SESSION['username'])) {
-  header("location: index2.php");
+  header("Location: index2.php");
+  exit();
 }
 
-$alert = "Masukan username dan password";
-if(isset($_POST['masuk'])) {
+$alert = "Masukkan username dan password";
+if (isset($_POST['masuk'])) {
+  // Ambil dan sanitasi input pengguna
+  $username = mysqli_real_escape_string($link, $_POST['username']);
+  $password = $_POST['password'];
 
-  $sql = "SELECT * FROM user where username='{$_POST['username']}' limit 1";
-
+  // Ambil data pengguna dari database berdasarkan username yang dimasukkan
+  $sql = "SELECT * FROM user WHERE username='$username' LIMIT 1";
   $result = mysqli_query($link, $sql);
-  $data = mysqli_fetch_array($result);
 
-  if(!password_verify($_POST['password'], $data['password'])) {
-    $alert = "Username / Password Salah";
+  if (mysqli_num_rows($result) == 1) {
+    $data = mysqli_fetch_array($result);
+
+    // Periksa apakah password yang dimasukkan cocok dengan hash yang disimpan di database
+    if (password_verify($password, $data['password'])) {
+      // Jika cocok, periksa apakah pengguna adalah admin
+      if ($data['status'] == 'ADMIN') {
+        // Atur sesi pengguna
+        $_SESSION['id'] = $data['id'];
+        $_SESSION['username'] = $data['username'];
+        $_SESSION['nama_lengkap'] = $data['nama_lengkap'];
+        $_SESSION['status'] = $data['status'];
+        header("Location: index2.php");
+        exit();
+      } else {
+        $alert = "Anda tidak memiliki akses admin";
+      }
+    } else {
+      // Jika password tidak cocok, tampilkan pesan kesalahan
+      $alert = "Password Salah";
+    }
   } else {
-  $_SESSION['nama_lengkap'] = $data['nama_lengkap'];
-  header("Location: index2.php"); 
+    // Jika username tidak ditemukan, tampilkan pesan kesalahan
+    $alert = "Username Salah";
   }
 }
 
@@ -31,7 +54,7 @@ if(isset($_POST['masuk'])) {
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>AdminLTE 3 | Log in (v2)</title>
+  <?php include("title.php") ?>
 
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
@@ -49,8 +72,8 @@ if(isset($_POST['masuk'])) {
     <div class="card-header text-center">
       <a href="login.php" class="h1"><b>LOG</b>IN</a>
     </div>
+    <p class="login-box-msg"><?php echo $alert ?></p>
     <div class="card-body">
-      <p class="login-box-msg"><?php echo $alert ?></p>
 
       <form action="" method="post">
         <div class="input-group mb-3">
