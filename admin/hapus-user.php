@@ -3,9 +3,9 @@
 include("koneksi.php");
 session_start();
 
-if (isset($_GET['id'])) {
-  $id = $_GET['id'];
-  $sql = "DELETE FROM user WHERE id='$id'";
+if (isset($_GET['admin_id'])) {
+  $admin_id = $_GET['admin_id'];
+  $sql = "DELETE FROM user WHERE admin_id='$admin_id'";
   if (mysqli_query($link, $sql)) {
       $_SESSION['success'] = "Pengguna berhasil dihapus.";
   } else {
