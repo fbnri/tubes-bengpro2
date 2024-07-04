@@ -118,7 +118,7 @@ $result = mysqli_query($link, $sql);
                       <td class="text-right py-0 align-middle">
                       <div class="btn-group btn-group-sm">
                         <a href="edit-user.php?id=<?php echo htmlspecialchars($data['id']); ?>" class="btn btn-warning"><i class="fas fa-pen"></i></a>
-                        <button class="btn btn-danger" onclick="confirmDelete(<?php echo htmlspecialchars($data['id']); ?>)"><i class="fas fa-trash"></i></button>
+                        <button class="btn btn-danger" onclick="confirmDelete(<?php echo htmlspecialchars($data['admin_id']); ?>)"><i class="fas fa-trash"></i></button>
                       </div>
                       </td>
                     </tr>
