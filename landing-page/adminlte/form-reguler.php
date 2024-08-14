@@ -40,9 +40,9 @@ if (isset($_POST['submit'])) {
   $prestasi = $timestamp . "_" . $_FILES['prestasi']['name'];
 
   // Simpan file yang diunggah
-  move_uploaded_file($_FILES['ijazah']['tmp_name'], "../ijazah/" . $ijazah);
-  move_uploaded_file($_FILES['rapor']['tmp_name'], "../rapor/" . $rapor);
-  move_uploaded_file($_FILES['prestasi']['tmp_name'], "../prestasi/" . $prestasi);
+  move_uploaded_file($_FILES['ijazah']['tmp_name'], "../../ijazah/" . $ijazah);
+  move_uploaded_file($_FILES['rapor']['tmp_name'], "../../rapor/" . $rapor);
+  move_uploaded_file($_FILES['prestasi']['tmp_name'], "../../prestasi/" . $prestasi);
 
   $sql = "INSERT INTO pendaftar_reguler (user_id, nama_siswa, ttl, jk, alamat, telp_siswa, agama, asal_sekolah, ijazah, rapor, prestasi, nama_ortu, pekerjaan, telp_ortu, pendidikan) VALUES ('$user_id', '$nama_siswa', '$ttl', '$jk', '$alamat', '$telp_siswa', '$agama', '$asal_sekolah', '$ijazah', '$rapor', '$prestasi', '$nama_ortu', '$pekerjaan', '$telp_ortu', '$pendidikan')";
 
@@ -241,7 +241,7 @@ if (isset($_POST['submit'])) {
                           </div>
                         </div>
                         <div class="form-group">
-                          <label for="prestasiInputFile">Prestasi</label>
+                          <label for="prestasiInputFile">Prestasi</label><p>*opsional</p>
                           <div class="input-group">
                             <div class="custom-file">
                               <input type="file" name="prestasi" class="custom-file-input" id="prestasiInputFile" accept=".pdf">
