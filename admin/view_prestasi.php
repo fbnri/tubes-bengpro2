@@ -1,7 +1,7 @@
 <?php
 if (isset($_GET['file'])) {
     $file = urldecode($_GET['file']);
-    $filepath = 'C:/xampp/htdocs/bengpro/teori/tubes/landing-page/prestasi/' . $file;
+    $filepath = 'C:/xampp/htdocs/bengpro/teori/tubes/prestasi/' . $file;
 
     // Check if file exists
     if (file_exists($filepath)) {

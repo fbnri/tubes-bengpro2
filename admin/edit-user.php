@@ -10,10 +10,11 @@ if (!isset($_SESSION['username'])) {
   exit();
 }
 
-$admin_id = $_SESSION['admin_id'];
-$sql = "SELECT * FROM user WHERE admin_id='$admin_id'";
+$id = $_GET['id'];
+$sql = "SELECT * FROM user WHERE id='$id'";
 $result = mysqli_query($link, $sql);
 $data = mysqli_fetch_array($result);
+
 
 if(isset($_POST['edit'])){
   $nama_lengkap = $_POST['nama_lengkap'];
@@ -120,7 +121,7 @@ if(isset($_POST['edit'])){
                   </div>
                   <div class="form-group">
                     <label for="exampleInputEmail1">Username</label>
-                    <input type="text" name="username" class="form-control" id="exampleInputEmail1" value="<?php echo $data['username'] ?>">
+                    <input type="text" name="username" value="<?php echo $data['username'] ?>" class="form-control" id="exampleInputEmail1">
                   </div>
                   <div class="form-group">
                     <label for="exampleInputPassword1">Password</label>

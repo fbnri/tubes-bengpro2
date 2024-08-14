@@ -36,15 +36,20 @@ if(isset($_POST['edit'])) {
   $telp_ortu = $_POST['telp_ortu'];
   $pendidikan = $_POST['pendidikan'];
 
+  // Cek apakah file diunggah, jika tidak gunakan file yang lama
+  $ijazah = !empty($_FILES['ijazah']['name']) ? time() . "_" . $_FILES['ijazah']['name'] : $data['ijazah'];
+  $rapor = !empty($_FILES['rapor']['name']) ? time() . "_" . $_FILES['rapor']['name'] : $data['rapor'];
+  $prestasi = !empty($_FILES['prestasi']['name']) ? time() . "_" . $_FILES['prestasi']['name'] : $data['prestasi'];
+
   // Simpan file yang diunggah
   if (!empty($_FILES['ijazah']['tmp_name'])) {
-    move_uploaded_file($_FILES['ijazah']['tmp_name'], "../ijazah/" . $ijazah);
+    move_uploaded_file($_FILES['ijazah']['tmp_name'], "../../ijazah/" . $ijazah);
   }
   if (!empty($_FILES['rapor']['tmp_name'])) {
-    move_uploaded_file($_FILES['rapor']['tmp_name'], "../rapor/" . $rapor);
+    move_uploaded_file($_FILES['rapor']['tmp_name'], "../../rapor/" . $rapor);
   }
   if (!empty($_FILES['prestasi']['tmp_name'])) {
-    move_uploaded_file($_FILES['prestasi']['tmp_name'], "../prestasi/" . $prestasi);
+    move_uploaded_file($_FILES['prestasi']['tmp_name'], "../../prestasi/" . $prestasi);
   }
 
   $sql = "UPDATE pendaftar_reguler SET nama_siswa='$nama_siswa', ttl='$ttl', jk='$jk', alamat='$alamat', telp_siswa='$telp_siswa', agama='$agama', asal_sekolah='$asal_sekolah', ijazah='$ijazah', rapor='$rapor', prestasi='$prestasi', nama_ortu='$nama_ortu', pekerjaan='$pekerjaan', telp_ortu='$telp_ortu', pendidikan='$pendidikan' WHERE user_id='$user_id'";
